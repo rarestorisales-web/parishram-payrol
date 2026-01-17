@@ -1,0 +1,2814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Parishram Enterprises - Payroll Portal</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a' },
+                        slate: { 850: '#1e293b', 900: '#0f172a', 950: '#020617' }
+                    },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- React & Babel -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+   <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* Prevent iOS zoom on input focus */
+        @media screen and (max-width: 768px) {
+            input, select, textarea {
+                font-size: 16px !important;
+            }
+        }
+
+        /* --- PRINT STYLES --- */
+        @media print {
+            @page {
+                size: A4;
+                margin: 0mm;
+            }
+
+            body * { visibility: hidden; }
+            #printable-area, #printable-area * { visibility: visible !important; }
+            
+            html, body, #root {
+                height: auto !important;
+                min-height: 0 !important;
+                overflow:  visible !important;
+                margin: 0;
+                padding: 0;
+                background: white;
+                -webkit-print-color-adjust:  exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Hiding UI Elements */
+            .no-print { display: none !important; visibility: hidden !important; }
+            .glass-card, header, aside, .modal-close, button, input[type="file"], .file-upload-btn, .mobile-nav, .search-bar, .screen-view-only, .modal-header {
+                display: none !important;
+            }
+            
+            /* Show Print Only Elements */
+            .print-view-only {
+                display: block !important;
+            }
+
+            /* Print Fix for Modals */
+            .print-modal-fix {
+                position: static !important;
+                top: auto !important;
+                left: auto !important;
+                width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
+                z-index: auto !important;
+                background: white !important;
+                display: block !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                flex: none !important;
+                max-height: none !important;
+                max-width: none !important;
+                border-radius: 0 !important;
+            }
+
+            /* The Printable Container */
+            #printable-area {
+                position: static !important;
+                left: auto !important;
+                top: auto !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                display: block !important;
+                overflow: visible !important;
+                height: auto !important;
+                flex: none !important;
+                flex-basis: auto !important;
+            }
+
+            /* --- APPLICATION FORM GRID (A4 Optimized) --- */
+            .form-container {
+                width: 100%;
+                border: 2px solid #000;
+                box-sizing: border-box;
+                margin-top: 10px;
+            }
+
+            .form-row {
+                display: flex;
+                border-bottom: 1px solid #000;
+            }
+            .form-row:last-child {
+                border-bottom: none;
+            }
+
+            .form-cell {
+                flex: 1;
+                border-right: 1px solid #000;
+                padding: 8px 10px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                min-height: 48px; 
+            }
+            .form-cell-horizontal {
+                flex: 1;
+                border-right: 1px solid #000;
+                padding: 8px 10px;
+                display: flex;
+                align-items:  center;
+                min-height:  48px; 
+            }
+            
+            .form-cell:last-child, .form-cell-horizontal:last-child {
+                border-right: none;
+            }
+
+            .form-label {
+                font-weight:  800;
+                text-transform: uppercase;
+                font-size: 10px;
+                color: #444;
+                margin-bottom: 2px;
+            }
+            
+            .form-label-horizontal {
+                font-weight: 800;
+                text-transform: uppercase;
+                font-size: 10px;
+                color: #000;
+                margin-right: 8px;
+                min-width: 90px;
+            }
+
+            .form-value {
+                font-weight: 700;
+                font-size: 12px;
+                color: #000;
+                min-height: 16px;
+            }
+
+            /* --- PAYSLIP SPECIFICS --- */
+            .payslip-container {
+                border: none;
+                margin: 0 !important;
+                padding: 5mm !important;
+                page-break-inside: avoid !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                break-inside: avoid !important;
+                display: block !important;
+                width: 100% !important;
+                height: auto !important;
+                max-height: none !important;
+                font-family: 'Times New Roman', serif;
+                position: relative;
+                background: white;
+                page-break-before: auto !important;
+                clear: both !important;
+                orphans: 1 !important;
+                widows: 1 !important;
+            }
+
+            /* Force page break before each payslip except first */
+            .payslip-container:not(:first-of-type) {
+                page-break-before: always !important;
+                break-before: page !important;
+            }
+
+            /* Remove page-break before first payslip */
+            .payslip-container:first-of-type {
+                page-break-before: avoid !important;
+                break-before: auto !important;
+            }
+
+            .payslip-header {
+                border-bottom: 2px solid #000;
+                padding: 5px !important;
+                margin-bottom: 3px !important;
+                background: #f0f0f0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .payslip-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 10px;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                margin: 2px 0 !important;
+            }
+
+            .payslip-table td, .payslip-table th {
+                border: 1px solid #000;
+                padding: 2px 4px;
+                page-break-inside: avoid !important;
+            }
+
+            .payslip-table th {
+                background: #e5e5e5;
+                text-align: left;
+                font-weight: 800;
+                text-transform: uppercase;
+                width: 25%;
+            }
+
+            /* Earnings & Deductions */
+            .payslip-container .flex {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                margin: 0 !important;
+            }
+
+            /* Signatures */
+            .signature-row {
+                display: flex; 
+                justify-content: space-between; 
+                padding-top: 30px;
+                padding-bottom:  10px;
+                margin:  20px 20px 0 20px;
+                page-break-inside: avoid;
+            }
+
+            .signature-block {
+                text-align: center;
+                width: 120px;
+                border-top:  1px solid #000;
+                padding-top: 5px;
+                font-weight: bold;
+                font-size: 10px;
+                text-transform:  uppercase;
+                position: relative;
+                page-break-inside:  avoid;
+            }
+
+            .signature-img {
+                position:  absolute;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                height: 40px;
+                object-fit:  contain;
+            }
+
+            /* --- APPLICATION FORM PRINT STYLES --- */
+            /* Ensure form stays on first page */
+            #printable-area {
+                page-break-inside: avoid;
+            }
+
+            /* Force page break before uploaded documents section */
+            .uploaded-documents-section {
+                page-break-before: always !important;
+                break-before: page !important;
+                margin-top: 0 !important;
+                padding-top: 10mm !important;
+            }
+
+            /* Keep document items together on page */
+            .uploaded-document-item {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                margin-bottom: 20px !important;
+                padding: 10px !important;
+                border: 1px solid #ddd !important;
+                page-break-after: auto !important;
+            }
+
+            /* Ensure each document preview doesn't break */
+            .document-preview {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                max-height: 100%;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+            }
+
+            .document-preview img {
+                max-width: 95% !important;
+                height: auto !important;
+                page-break-inside: avoid !important;
+            }
+
+            /* Form container should not break */
+            .form-container {
+                page-break-inside: avoid;
+            }
+        }
+</style>
+</head>
+<body class="text-slate-900 antialiased min-h-screen overflow-auto bg-slate-50 text-base md:text-sm">
+    <div id="root" class="w-full"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        const API_FILE = 'api.php';
+        const LOGO_URL = "https://parishrams.in/wp-content/uploads/2025/09/cropped-cropped-WhatsApp-Image-2025-09-22-at-22.00.53-1.jpeg";
+        const DEFAULT_SIGNATURE_URL = "https://parishrams.in/wp-content/uploads/2025/12/Blue-Green-Red-and-Pink-Playful-Creative-Studio-Logo-1.png";
+
+        // --- HELPER FUNCTIONS ---
+        const formatCurrency = (v) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(v || 0);
+        
+        const calcDeductions = (e) => {
+            return Number(e.pf||0) + Number(e.esic||0) + Number(e.gwlf||0) + Number(e.pt||0) + 
+                   Number(e.advance||0) + Number(e.trn||0) + Number(e.rr||0) + Number(e.food||0) + 
+                   Number(e.pf_2||0) + Number(e.trn_2||0) + Number(e.leave_amt||0);
+        };
+
+        const calcEarnings = (e) => {
+            return Number(e.salary||0) + Number(e.wages||0) + Number(e.bonus||0) + Number(e.hra||0) + Number(e.ot||0) + Number(e.misc||0);
+        };
+
+        const calcNet = (e) => calcEarnings(e) - calcDeductions(e);
+
+        const getId = (param) => {
+            if (typeof param === 'number') return param;
+            if (typeof param === 'string') {
+                if (param.startsWith('id=')) return parseInt(param.split('=')[1]);
+                const parsed = parseInt(param);
+                if (!isNaN(parsed)) return parsed;
+            }
+            if (typeof param === 'object' && param !== null && param.id) return param.id;
+            return null;
+        };
+
+        // Lucide Icons via CDN for reliability
+        const Icon = ({ name, className = "w-5 h-5" }) => {
+            const icons = {
+                dashboard: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/layout-dashboard.svg",
+                payroll: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/banknote.svg", 
+                history: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/history.svg",
+                forms: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/clipboard-list.svg",
+                settings: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/settings.svg",
+                logout: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/log-out.svg",
+                trash: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/trash-2.svg",
+                plus: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/plus.svg",
+                save: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/save.svg",
+                printer: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/printer.svg",
+                search: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/search.svg",
+                download: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/download.svg",
+                upload: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/upload.svg",
+                arrowLeft: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/arrow-left.svg",
+                user: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/user.svg",
+                file: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/file.svg",
+                x: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/x.svg",
+                globe: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/globe.svg",
+                edit: "https://cdn.jsdelivr.net/npm/lucide-static@0.469.0/icons/pencil.svg"
+            };
+
+            const url = icons[name] || icons.dashboard;
+
+            return (
+                <div 
+                    className={className} 
+                    style={{
+                        backgroundColor: 'currentColor',
+                        maskImage: `url(${url})`,
+                        maskRepeat: 'no-repeat',
+                        maskPosition: 'center',
+                        maskSize: 'contain',
+                        WebkitMaskImage: `url(${url})`,
+                        WebkitMaskRepeat: 'no-repeat',
+                        WebkitMaskPosition: 'center',
+                        WebkitMaskSize: 'contain'
+                    }}
+                />
+            );
+        };
+
+    const SignaturePad = ({ onSave, onClose }) => {
+        const canvasRef = useRef(null);
+        const [isDrawing, setIsDrawing] = useState(false);
+
+        useEffect(() => {
+            const canvas = canvasRef.current;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight - 150;
+            const ctx = canvas.getContext('2d');
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = 'black';
+            
+            // Handle resize
+            const handleResize = () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight - 150;
+                ctx.lineWidth = 3;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = 'black';
+            };
+            window.addEventListener('resize', handleResize);
+            return () => window.removeEventListener('resize', handleResize);
+        }, []);
+
+        const start = (e) => { setIsDrawing(true); draw(e); }
+        const end = () => { setIsDrawing(false); const ctx = canvasRef.current.getContext('2d'); ctx.beginPath(); }
+
+        const draw = (e) => {
+            if (!isDrawing) return;
+            // e.preventDefault(); // Sometimes prevents scrolling on mobile, needed for canvas but handled carefully
+            const canvas = canvasRef.current;
+            const ctx = canvas.getContext('2d');
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        return (
+            <div className="fixed inset-0 z-[200] bg-white flex flex-col animate-fade-in w-full h-full">
+                <div className="p-4 border-b flex justify-between items-center bg-slate-50">
+                    <h3 className="font-bold text-lg">Sign Below</h3>
+                    <button onClick={onClose} className="p-2 bg-slate-200 rounded-full hover:bg-slate-300"><Icon name="x" /></button>
+                </div>
+                <canvas 
+                    ref={canvasRef} 
+                    className="flex-1 bg-white cursor-crosshair touch-none w-full"
+                    onMouseDown={start} onMouseUp={end} onMouseMove={draw}
+                    onTouchStart={start} onTouchEnd={end} onTouchMove={draw}
+                />
+                <div className="p-6 border-t flex gap-4 justify-center bg-slate-50 safe-area-bottom">
+                    <button onClick={() => { const c = canvasRef.current; c.getContext('2d').clearRect(0,0,c.width,c.height); }} className="px-6 py-3 bg-red-100 text-red-600 rounded-xl font-bold flex-1">Clear</button>
+                    <button onClick={() => { onSave(canvasRef.current.toDataURL()); onClose(); }} className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg flex-1">Save</button>
+                </div>
+            </div>
+        );
+    };
+
+    const Card = ({ title, value, subtext, icon, color }) => (
+        <div className="glass-card p-6 rounded-2xl relative overflow-hidden group bg-white shadow-sm border border-slate-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+            <div className={`absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity ${color}`}>
+                <Icon name={icon} className="w-16 h-16" /> 
+            </div>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 z-10 relative">{title}</p>
+            <p className="text-3xl md:text-4xl font-extrabold text-slate-800 z-10 relative">{value}</p>
+            {subtext && <p className={`text-xs font-bold mt-2 z-10 relative ${color.replace('text-', 'text-opacity-80 ')}`}>{subtext}</p>}
+        </div>
+    );
+
+    const Login = ({ setUser, isDemo, users = [] }) => (
+        <div className="h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
+            <div className="glass p-8 md:p-10 rounded-[2rem] shadow-2xl w-full max-w-md animate-slide-up border border-white/20 bg-white/10 backdrop-blur-md">
+                <div className="text-center mb-8">
+                    <img src={LOGO_URL} alt="Parishram" className="w-20 h-20 rounded-2xl mx-auto mb-4 shadow-lg object-cover bg-white" />
+                    <h2 className="text-2xl font-black text-white tracking-tight">Welcome Back</h2>
+                    <p className="text-slate-300 text-sm mt-1">Parishram Enterprises Payroll</p>
+                    {isDemo && <p className="text-amber-400 font-bold text-xs mt-2 uppercase tracking-widest bg-amber-500/20 py-1 px-3 rounded-full inline-block">Demo Mode Active</p>}
+                </div>
+                <form onSubmit={(e) => {
+                    e.preventDefault();
+                    if (isDemo) { setUser({ username: "Demo User", role: "Super Admin", permissions: {dashboard: true, payroll: true, history: true, submissions: true, settings: true} }); return; }
+                    const u = e.target.u.value;
+                    const p = e.target.p.value;
+                    if (u === 'saurabh' && p === 'saurabh#184') { setUser({ username: "Admin", role: "Super Admin", permissions: {dashboard: true, payroll: true, history: true, submissions: true, settings: true} }); return; }
+                    const found = users.find(usr => usr.username === u && usr.password === p);
+                    if (found) { setUser(found); return; }
+                    alert("Invalid username or password");
+                }} className="space-y-4">
+                    <input name="u" className="w-full p-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors" placeholder="Username" required defaultValue={isDemo ? "admin" : ""} />
+                    <input name="p" type="password" className="w-full p-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors" placeholder="Password" required defaultValue={isDemo ? "123" : ""} />
+                    <button className="w-full p-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-lg shadow-blue-500/30 transition-all transform hover:scale-[1.02] mt-4">Secure Login</button>
+                </form>
+            </div>
+        </div>
+    );
+
+    const Sidebar = ({ user, tab, setTab, setUser }) => (
+        <aside className="hidden md:flex w-20 lg:w-72 bg-slate-900 text-white flex-col shrink-0 no-print transition-all duration-300 z-20 h-screen sticky top-0 border-r border-slate-800/50">
+            <div className="p-8 flex items-center gap-4">
+                <img src={LOGO_URL} className="w-12 h-12 object-contain bg-white rounded-xl shadow-lg p-1" alt="Logo" />
+                <h1 className="hidden lg:block font-black tracking-tight text-lg leading-tight">PARISHRAM<br/><span className="text-slate-500 text-xs font-medium tracking-normal">Payroll System</span></h1>
+            </div>
+            <nav className="flex-1 px-4 space-y-2 overflow-y-auto">
+                {[{ id: 'dashboard', icon: 'dashboard', label: 'Overview' }, { id: 'payroll', icon: 'payroll', label: 'Payroll' }, { id: 'submissions', icon: 'forms', label: 'Applications' }, { id: 'history', icon: 'history', label: 'History & Batches' }, { id: 'settings', icon: 'settings', label: 'Settings' }].map(item => {
+                    if (user.role !== 'Super Admin' && !user.permissions?.[item.id]) return null;
+                    return (
+                        <button key={item.id} onClick={() => setTab(item.id)} className={`w-full flex items-center p-3.5 rounded-xl transition-all group ${tab === item.id ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+                            <Icon name={item.icon} className="w-5 h-5 lg:mr-3" /><span className="hidden lg:block font-semibold text-sm">{item.label}</span>
+                        </button>
+                    );
+                })}
+                <a href="https://parishrams.in/" target="_blank" className="w-full flex items-center p-3.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white group mt-4 border-t border-slate-800/50 pt-4">
+                    <Icon name="globe" className="w-5 h-5 lg:mr-3" />
+                    <span className="hidden lg:block font-semibold text-sm">Visit Website</span>
+                </a>
+            </nav>
+            <div className="p-4 border-t border-slate-800">
+                <button onClick={() => setUser(null)} className="w-full flex items-center p-3.5 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white"><Icon name="logout" className="w-5 h-5 lg:mr-3" /><span className="hidden lg:block font-bold text-sm">Sign Out</span></button>
+            </div>
+        </aside>
+    );
+
+    const MobileNav = ({ user, tab, setTab, setUser }) => (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900 text-white flex justify-around p-2 pb-safe-area z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] mobile-nav border-t border-slate-800">
+            {[{ id: 'dashboard', icon: 'dashboard', label: 'Home' }, { id: 'payroll', icon: 'payroll', label: 'Pay' }, { id: 'submissions', icon: 'forms', label: 'Apps' }, { id: 'history', icon: 'history', label: 'Data' }, { id: 'settings', icon: 'settings', label: 'Set' }].map(item => {
+                if (user.role !== 'Super Admin' && !user.permissions?.[item.id]) return null;
+                return (<button key={item.id} onClick={() => setTab(item.id)} className={`flex flex-col items-center gap-1 p-2 ${tab === item.id ? 'text-blue-400' : 'text-slate-500'}`}><Icon name={item.icon} className="w-6 h-6" /><span className="text-[10px] font-semibold">{item.label}</span></button>);
+            })}
+            <button onClick={() => setUser(null)} className="flex flex-col items-center gap-1 p-2 text-slate-500"><Icon name="logout" className="w-6 h-6" /><span className="text-[10px] font-semibold">Exit</span></button>
+        </div>
+    );
+
+    const DashboardTab = ({ data }) => (
+        <div className="space-y-6 md:space-y-8 animate-fade-in max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                <Card title="Total Staff" value={data.employees.length} icon="payroll" color="text-blue-500" />
+                <Card title="Monthly Gross" value={formatCurrency(data.employees.reduce((a,c)=>a+calcEarnings(c),0))} icon="save" color="text-emerald-500" />
+                <Card title="New Applications" value={data.submissions.length} icon="forms" color="text-amber-500" />
+            </div>
+            <div className="glass-card p-4 md:p-6 bg-white"><h3 className="font-bold text-lg mb-4 flex items-center gap-2"><Icon name="history"/> Recent Activity</h3>
+                <div className="space-y-3">{(!data.activityLog || data.activityLog.length === 0) ? <p className="text-sm text-slate-400 italic">No recent activity.</p> : data.activityLog.slice(0, 5).map(log => (<div key={log.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-sm p-3 bg-slate-50 rounded-xl border border-slate-100 gap-2"><div className="flex items-center gap-3"><div className="w-2 h-2 bg-blue-500 rounded-full shrink-0"></div><span><span className="font-bold">{log.user}</span> {log.action} <span className="text-slate-500 font-medium">({log.details})</span></span></div><div className="text-xs text-slate-400 font-mono ml-5 sm:ml-0">{log.time}</div></div>))}</div>
+            </div>
+        </div>
+    );
+
+   const PayrollTab = ({ data, api, setModalOpen, setEditingEmployee, empDetailsFields, customFields, openSigPad, getSignatureImage }) => {
+    const [search, setSearch] = useState("");
+    const [selectedIds, setSelectedIds] = useState([]);
+    const [previewMode, setPreviewMode] = useState(false);
+    const [previewItem, setPreviewItem] = useState(null);
+    
+    // --- NEW FILTER STATES ---
+    const [filterOpen, setFilterOpen] = useState(false);
+    const [filters, setFilters] = useState({
+        company: "",
+        cardNo: "",
+        name: "",
+        salary_min: "",
+        salary_max: ""
+    });
+
+    // --- GET UNIQUE COMPANIES ---
+    const uniqueCompanies = [...  new Set(data.employees.map(e => e.company).filter(Boolean))];
+
+    // --- APPLY FILTERS ---
+    const applyFilters = (employees) => {
+        return employees.filter(e => {
+            if (filters.company && e.company !== filters.company) return false;
+            if (filters.cardNo && ! e.cardNo?. toString().includes(filters.cardNo)) return false;
+            if (filters.name && ! e.name?. toLowerCase().includes(filters.name. toLowerCase())) return false;
+            if (filters.salary_min && Number(e.salary || 0) < Number(filters.salary_min)) return false;
+            if (filters. salary_max && Number(e. salary || 0) > Number(filters.salary_max)) return false;
+            
+            if (search) {
+                const searchLower = search.toLowerCase();
+                if (!e.name?.toLowerCase().includes(searchLower) && !e.cardNo?.toString().includes(searchLower)) {
+                    return false;
+                }
+            }
+            return true;
+        });
+    };
+
+    const filtered = applyFilters(data. employees);
+
+    const handleResetFilters = () => {
+        setFilters({
+            company: "",
+            cardNo: "",
+            name: "",
+            salary_min: "",
+            salary_max: ""
+        });
+        setSearch("");
+    };
+
+    const handleSelectAll = () => {
+        if (selectedIds.length === filtered.length) {
+            setSelectedIds([]);
+        } else {
+            setSelectedIds(filtered. map(e => e.id));
+        }
+    };
+
+    const handleBulkPrint = () => {
+        if(selectedIds.length === 0) return alert("Select employees to print.");
+        setPreviewItem({ isBulk: true, employees: data.employees. filter(e => selectedIds.includes(e.id)) });
+        setPreviewMode(true);
+    };
+
+    const handleBulkDelete = () => {
+        if (confirm(`Delete ${selectedIds.length} employees? `)) {
+            selectedIds.forEach(id => api('delete_employee&id=' + id));
+            setSelectedIds([]);
+        }
+    };
+    
+    const handleDeleteSingle = (id) => {
+         if (confirm(`Delete this record?`)) {
+            api('delete_employee&id=' + id);
+            if (previewMode) {
+                setPreviewMode(false);
+                setPreviewItem(null);
+            }
+         }
+    };
+
+    const handleSaveBatch = () => {
+        const name = prompt("Enter Batch Name (e.g., Oct 2023):");
+        if (name) api('save_batch', { name, date: new Date().toLocaleDateString(), data: filtered. length > 0 ? filtered : data.employees });
+    };
+
+    const downloadSampleCSV = () => {
+        const csvContent = "data:text/csv;charset=utf-8,Name,CardNo,Salary,Wages,Bonus,HRA,OT,Misc,Days,Hrs,PF,ESIC,GWLF,PT,Advance,Food,TRN,RR,LeaveAmt,UAN,ESICNo,AGT,IFSC,AccountNo,Company\nJohn Doe,1001,15000,0,0,0,0,0,26,208,1800,100,0,0,0,0,0,0,0,123456789012,1234567890,Group A,SBIN0001234,1234567890,Soni Metal Pvt Ltd";
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "sample_payroll_import.csv");
+        document.body.appendChild(link);
+        link.click();
+    };
+
+    const handleBulkImport = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            const csv = event.target.result;
+            const lines = csv.split('\n');
+            let importedCount = 0;
+            
+            for(let i = 1; i < lines.length; i++) {
+                const row = lines[i].trim().split(',');
+                if(row.length > 1 && row[0].trim()) {
+                    const emp = {
+                        id: Date.now() + i,
+                        name: row[0].trim(), 
+                        cardNo: row[1] ?  row[1].trim() : '', 
+                        salary: row[2] ? Number(row[2]) : 0, 
+                        wages: row[3] ? Number(row[3]) : 0,
+                        bonus: row[4] ? Number(row[4]) : 0, 
+                        hra: row[5] ? Number(row[5]) : 0, 
+                        ot: row[6] ? Number(row[6]) : 0, 
+                        misc: row[7] ? Number(row[7]) : 0,
+                        days: row[8] ? Number(row[8]) : 26, 
+                        hrs: row[9] ? Number(row[9]) : 208, 
+                        pf: row[10] ? Number(row[10]) : 0, 
+                        esic: row[11] ? Number(row[11]) : 0,
+                        gwlf: row[12] ? Number(row[12]) : 0, 
+                        pt: row[13] ? Number(row[13]) : 0, 
+                        advance: row[14] ? Number(row[14]) : 0, 
+                        food: row[15] ? Number(row[15]) : 0,
+                        trn: row[16] ? Number(row[16]) : 0, 
+                        rr: row[17] ? Number(row[17]) : 0, 
+                        leave_amt: row[18] ?  Number(row[18]) : 0,
+                        uan: row[19] ? row[19].trim() : '', 
+                        esicNo: row[20] ? row[20].trim() : '', 
+                        agt: row[21] ? row[21].trim() : '',
+                        ifscCode: row[22] ? row[22].trim() : '', 
+                        accountNumber: row[23] ? row[23].trim() : '',
+                        company: row[24] ?  row[24].trim() : ''
+                    };
+                    await api('save_employee', emp);
+                    importedCount++;
+                }
+            }
+            alert(`Successfully imported ${importedCount} employees! `);
+            setTimeout(() => refresh(), 500);
+        };
+        reader. readAsText(file);
+    };
+
+    // --- PAYSLIP RENDERER (PROFESSIONAL DESIGN) ---
+    // KEY FIX: Get fresh employee data from main data source
+    const PayslipComponent = ({ employeeId }) => {
+        // Fetch the LATEST employee data from data. employees
+        const item = data.employees.find(e => String(e.id) === String(employeeId));
+        
+        if (!item) {
+            return <div className="p-4 text-red-600">Employee not found</div>;
+        }
+
+        return (
+            <div className="payslip-container" style={{fontFamily: '"Times New Roman", serif', backgroundColor: '#ffffff', borderTop: '3px solid #1e40af'}}>
+                {/* HEADER SECTION */}
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '2px solid #1e40af', paddingBottom: '8px', marginBottom: '8px'}}>
+                    <div style={{display: 'flex', alignItems:  'center', gap: '12px'}}>
+                        <img src={LOGO_URL} style={{height: '50px', width: '50px', objectFit: 'contain'}} />
+                        <div>
+                            <h1 style={{margin: '0', fontSize: '18px', fontWeight: '900', color: '#1e40af', letterSpacing: '0.5px'}}>PARISHRAM ENTERPRISES</h1>
+                            <p style={{margin: '2px 0 0 0', fontSize: '10px', color: '#64748b', fontWeight: '600'}}>Manpower Supply & Labour Contractor</p>
+                            <p style={{margin: '1px 0 0 0', fontSize: '9px', color: '#94a3b8'}}>CIN/Registration:  XXXXX | Ph: +91-XXXXXXXXXX</p>
+                        </div>
+                    </div>
+                    <div style={{textAlign: 'right'}}>
+                        <p style={{margin: '0', fontSize: '11px', fontWeight: '700', color: '#1e40af'}}>SALARY SLIP</p>
+                        <p style={{margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: '#333'}}>{new Date().toLocaleString('default', { month: 'long', year: 'numeric' }).toUpperCase()}</p>
+                        <p style={{margin: '2px 0 0 0', fontSize: '9px', color: '#64748b'}}>Site: <strong>{item.company || 'Main Office'}</strong></p>
+                    </div>
+                </div>
+
+                {/* EMPLOYEE DETAILS SECTION */}
+                <div style={{marginBottom: '8px'}}>
+                    <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap:  '0', borderCollapse: 'collapse'}}>
+                        <div style={{borderRight: '1px solid #cbd5e1', borderBottom: '1px solid #cbd5e1', padding: '6px 8px', backgroundColor: '#f1f5f9'}}>
+                            <p style={{margin: '0 0 2px 0', fontSize: '8px', fontWeight: '700', color: '#475569', textTransform: 'uppercase'}}>Employee Name</p>
+                            <p style={{margin: '0', fontSize: '10px', fontWeight: '700', color: '#0f172a'}}>{item.name}</p>
+                        </div>
+                        <div style={{borderBottom: '1px solid #cbd5e1', padding: '6px 8px', backgroundColor: '#f1f5f9'}}>
+                            <p style={{margin:  '0 0 2px 0', fontSize: '8px', fontWeight: '700', color:  '#475569', textTransform:  'uppercase'}}>ID / Card No</p>
+                            <p style={{margin: '0', fontSize: '10px', fontWeight: '700', color: '#0f172a'}}>{item. cardNo}</p>
+                        </div>
+                        <div style={{borderRight: '1px solid #cbd5e1', borderBottom: '1px solid #cbd5e1', padding: '6px 8px'}}>
+                            <p style={{margin: '0 0 2px 0', fontSize: '8px', fontWeight: '700', color: '#475569', textTransform: 'uppercase'}}>UAN</p>
+                            <p style={{margin: '0', fontSize: '10px', color: '#1e293b'}}>{item.uan || '—'}</p>
+                        </div>
+                        <div style={{borderBottom: '1px solid #cbd5e1', padding: '6px 8px'}}>
+                            <p style={{margin: '0 0 2px 0', fontSize: '8px', fontWeight: '700', color: '#475569', textTransform: 'uppercase'}}>ESIC No</p>
+                            <p style={{margin: '0', fontSize: '10px', color: '#1e293b'}}>{item.esicNo || '—'}</p>
+                        </div>
+                        <div style={{borderRight: '1px solid #cbd5e1', borderBottom: '1px solid #cbd5e1', padding: '6px 8px'}}>
+                            <p style={{margin: '0 0 2px 0', fontSize: '8px', fontWeight: '700', color: '#475569', textTransform: 'uppercase'}}>Bank Account</p>
+                            <p style={{margin: '0', fontSize:  '10px', color: '#1e293b'}}>{item.accountNumber || '—'}</p>
+                        </div>
+                        <div style={{borderBottom: '1px solid #cbd5e1', padding:  '6px 8px'}}>
+                            <p style={{margin: '0 0 2px 0', fontSize: '8px', fontWeight: '700', color: '#475569', textTransform: 'uppercase'}}>IFSC Code</p>
+                            <p style={{margin: '0', fontSize: '10px', color: '#1e293b'}}>{item.ifscCode || '—'}</p>
+                        </div>
+                        <div style={{borderRight: '1px solid #cbd5e1', padding: '6px 8px'}}>
+                            <p style={{margin: '0 0 2px 0', fontSize: '8px', fontWeight: '700', color: '#475569', textTransform: 'uppercase'}}>Days Worked</p>
+                            <p style={{margin: '0', fontSize: '10px', fontWeight: '600', color: '#0f172a'}}>{item.days}</p>
+                        </div>
+                        <div style={{padding: '6px 8px'}}>
+                            <p style={{margin: '0 0 2px 0', fontSize: '8px', fontWeight: '700', color: '#475569', textTransform: 'uppercase'}}>Hours Worked</p>
+                            <p style={{margin: '0', fontSize: '10px', fontWeight: '600', color: '#0f172a'}}>{item.hrs}</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* EARNINGS & DEDUCTIONS SECTION */}
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0', marginBottom: '6px', borderCollapse: 'collapse', border: '1px solid #1e40af'}}>
+                    {/* EARNINGS */}
+                    <div>
+                        <div style={{backgroundColor: '#1e40af', color: 'white', padding: '6px 8px', fontWeight: '700', fontSize: '10px', textAlign: 'center', borderBottom: '1px solid #1e40af', letterSpacing: '0.5px'}}>EARNINGS</div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', padding: '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize: '9px'}}><span>Basic Salary</span><span style={{fontWeight: '600'}}>{item.salary}</span></div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', padding: '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize: '9px'}}><span>Wages/Stipend</span><span style={{fontWeight: '600'}}>{item.wages}</span></div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', padding: '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize: '9px'}}><span>HRA</span><span style={{fontWeight: '600'}}>{item.hra}</span></div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', padding: '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize: '9px'}}><span>Bonus/Incentive</span><span style={{fontWeight: '600'}}>{item.bonus}</span></div>
+                        <div style={{display:  'flex', justifyContent:  'space-between', padding:  '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize:  '9px'}}><span>Overtime</span><span style={{fontWeight: '600'}}>{item. ot}</span></div>
+                        <div style={{display:  'flex', justifyContent:  'space-between', padding:  '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize:  '9px'}}><span>Miscellaneous</span><span style={{fontWeight: '600'}}>{item.misc}</span></div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', padding: '5px 8px', backgroundColor: '#1e40af', color: 'white', fontWeight: '700', fontSize: '9px'}}><span>GROSS EARNINGS</span><span>{formatCurrency(calcEarnings(item))}</span></div>
+                    </div>
+
+                    {/* DEDUCTIONS */}
+                    <div style={{borderLeft: '1px solid #1e40af'}}>
+                        <div style={{backgroundColor: '#1e40af', color: 'white', padding: '6px 8px', fontWeight: '700', fontSize: '10px', textAlign: 'center', borderBottom: '1px solid #1e40af', letterSpacing: '0.5px'}}>DEDUCTIONS</div>
+                        <div style={{display:  'flex', justifyContent:  'space-between', padding:  '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize:  '9px'}}><span>Provident Fund (PF)</span><span style={{fontWeight: '600'}}>{item.pf}</span></div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', padding: '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize: '9px'}}><span>ESIC</span><span style={{fontWeight:  '600'}}>{item.esic}</span></div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', padding: '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize: '9px'}}><span>Professional Tax</span><span style={{fontWeight:  '600'}}>{item.pt}</span></div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', padding: '4px 8px', borderBottom:  '1px solid #e2e8f0', fontSize: '9px'}}><span>Advance/Loan</span><span style={{fontWeight:  '600'}}>{item.advance}</span></div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', padding: '4px 8px', borderBottom:  '1px solid #e2e8f0', fontSize: '9px'}}><span>Food/Canteen</span><span style={{fontWeight: '600'}}>{item.food}</span></div>
+                        <div style={{display:  'flex', justifyContent:  'space-between', padding:  '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize:  '9px'}}><span>Welfare/Other</span><span style={{fontWeight: '600'}}>{Number(item.gwlf)+Number(item.trn)+Number(item.rr)}</span></div>
+                        <div style={{display: 'flex', justifyContent: 'space-between', padding: '5px 8px', backgroundColor: '#1e40af', color: 'white', fontWeight: '700', fontSize: '9px'}}><span>TOTAL DEDUCTIONS</span><span>{formatCurrency(calcDeductions(item))}</span></div>
+                    </div>
+                </div>
+
+                {/* NET SALARY SECTION */}
+                <div style={{backgroundColor: '#0f172a', color: 'white', padding: '8px 12px', marginBottom: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #1e40af', borderTop: 'none'}}>
+                    <div style={{fontSize: '9px', fontWeight: '600', letterSpacing: '1px', textTransform: 'uppercase'}}>Net Salary Payable</div>
+                    <div style={{fontSize: '14px', fontWeight: '900'}}>{formatCurrency(calcNet(item))}</div>
+                </div>
+
+                {/* FOOTER SECTION WITH SIGNATURES */}
+                <div style={{marginTop: '12px', pageBreakInside: 'avoid'}}>
+                    <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '0'}}>
+                        {/* Employee Signature */}
+                        <div style={{textAlign: 'center', pageBreakInside: 'avoid'}}>
+                            <div style={{borderBottom: '1px solid #1e40af', paddingBottom:  '4px', minHeight: '35px', display: 'flex', alignItems:  'center', justifyContent:  'center'}}>
+                                {getSignatureImage('employee') && <img src={getSignatureImage('employee')} style={{maxHeight: '30px', maxWidth: '80px', objectFit: 'contain'}} />}
+                            </div>
+                            <p style={{margin: '4px 0 0 0', fontSize: '9px', fontWeight: '700', color: '#0f172a'}}>Employee Signature</p>
+                            <p style={{margin: '1px 0 0 0', fontSize: '8px', color: '#64748b'}}>Employee</p>
+                        </div>
+
+                        {/* HR/Manager Signature */}
+                        <div style={{textAlign: 'center', pageBreakInside:  'avoid'}}>
+                            <div style={{borderBottom: '1px solid #1e40af', paddingBottom: '4px', minHeight: '35px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                {getSignatureImage('hr') && <img src={getSignatureImage('hr')} style={{maxHeight: '30px', maxWidth: '80px', objectFit: 'contain'}} />}
+                            </div>
+                            <p style={{margin:  '4px 0 0 0', fontSize: '9px', fontWeight: '700', color:  '#0f172a'}}>HR/Manager Signature</p>
+                            <p style={{margin:  '1px 0 0 0', fontSize: '8px', color: '#64748b'}}>HR Manager</p>
+                        </div>
+
+                        {/* Director/Owner Signature */}
+                        <div style={{textAlign: 'center', pageBreakInside:  'avoid'}}>
+                            <div style={{borderBottom: '2px solid #1e40af', paddingBottom: '4px', minHeight: '35px', display: 'flex', alignItems:  'center', justifyContent:  'center'}}>
+                                <span style={{fontSize: '8px', color: '#94a3b8'}}>[Signature Area]</span>
+                            </div>
+                            <p style={{margin: '4px 0 0 0', fontSize: '9px', fontWeight: '700', color: '#0f172a'}}>Authorized Signatory</p>
+                            <p style={{margin: '1px 0 0 0', fontSize: '8px', color: '#64748b'}}>Director/Owner</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* FOOTER NOTE */}
+                <div style={{marginTop: '10px', padding: '6px 8px', backgroundColor: '#f1f5f9', borderLeft: '3px solid #1e40af', fontSize: '8px', color: '#475569', lineHeight: '1.3'}}>
+                    <p style={{margin: '0'}}>This is a computer-generated payslip and does not require signature.  Please verify the details and contact HR for any discrepancies.</p>
+                </div>
+            </div>
+        );
+    };
+
+    // --- PRINT FUNCTION ---
+    const handlePrintPayslips = () => {
+        const printableArea = document.getElementById('printable-area-payroll');
+        if (!printableArea) {
+            alert('No content to print');
+            return;
+        }
+        const printContent = printableArea.innerHTML;
+        const printWindow = window.open('', '', 'width=800,height=600');
+        if (!printWindow) {
+            alert('Please disable popup blockers and try again');
+            return;
+        }
+        let htmlContent = `
+            <html>
+            <head>
+                <title>Payslip Print</title>
+                <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    html, body { width: 100%; height: 100%; }
+                    @page { size: A4; margin:  0; }
+                    @media print {
+                        body { margin: 0; padding:  0; }
+                        .payslip-container { page-break-after: always; page-break-inside: avoid; margin: 0; padding: 5mm; }
+                    }
+                    body { font-family: Arial, sans-serif; background:  white; margin: 0; padding: 0; }
+                    .payslip-container { border: none; margin: 0; padding: 5mm; width: 100%; break-after: page; break-inside: avoid; }
+                </style>
+            </head>
+            <body>
+                ${printContent}
+            </body>
+            </html>
+        `;
+        printWindow.document.write(htmlContent);
+        printWindow. document.close();
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 250);
+    };
+
+    // --- PREVIEW MODAL (PAYROLL TAB) ---
+    if (previewMode && previewItem) {
+        const slips = previewItem.isBulk ? previewItem.employees : [previewItem];
+        return (
+            <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[60] flex items-center justify-center p-0 md:p-4">
+                <div className="bg-white rounded-lg shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col h-full md:max-h-[90vh]">
+                    <div className="p-4 border-b flex justify-between items-center bg-slate-50 shrink-0 no-print">
+                        <h3 className="font-bold text-lg">Payslip Preview</h3>
+                        <div className="flex gap-2">
+                            <button onClick={handlePrintPayslips} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold flex items-center gap-2"><Icon name="printer" className="w-4 h-4"/> Print</button>
+                            {! previewItem.isBulk && <button onClick={() => handleDeleteSingle(previewItem.id)} className="px-4 py-2 bg-red-100 text-red-600 rounded-lg text-sm font-bold flex items-center gap-2"><Icon name="trash" className="w-4 h-4"/> Delete</button>}
+                            <button onClick={() => {setPreviewMode(false); setPreviewItem(null);}} className="p-2 hover:bg-slate-200 rounded-full"><Icon name="logout" className="w-5 h-5"/></button>
+                        </div>
+                    </div>
+                    <div className="p-4 md:p-8 overflow-y-auto bg-white flex-1" id="printable-area-payroll">
+                        {slips. map((item, idx) => (
+                            <PayslipComponent key={idx} employeeId={item.id} />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // ...  Main Payroll List View Code ...
+    return (
+        <div className="glass-card rounded-3xl flex flex-col h-full animate-fade-in overflow-hidden bg-white shadow-sm border border-slate-200">
+            {/* Header Controls */}
+            <div className="p-4 md:p-6 border-b border-slate-100 flex flex-col gap-4 bg-slate-50/50">
+                {/* Row 1: Search Bar */}
+                <div className="flex flex-col md:flex-row gap-4 w-full">
+                    <div className="relative group flex-1 w-full">
+                        <Icon name="search" className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors"/>
+                        <input 
+                            type="text" 
+                            placeholder="Search by name or card no..." 
+                            className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all shadow-sm" 
+                            value={search} 
+                            onChange={(e) => setSearch(e.target. value)}
+                        />
+                    </div>
+                    <button 
+                        onClick={() => setFilterOpen(! filterOpen)} 
+                        className={`px-4 py-3 border rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${filterOpen ? 'bg-blue-100 border-blue-300 text-blue-700' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+                    >
+                        <Icon name="search" className="w-4 h-4"/> Filters
+                    </button>
+                </div>
+
+                {/* Row 2: Filter Panel */}
+                {filterOpen && (
+                    <div className="p-4 bg-white border-2 border-blue-200 rounded-xl space-y-4">
+                        <h4 className="font-bold text-slate-700 text-sm uppercase tracking-wider">Advanced Filters</h4>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {/* Company Filter */}
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 mb-2 uppercase">Company</label>
+                                <select 
+                                    value={filters.company} 
+                                    onChange={(e) => setFilters({...filters, company: e. target.value})}
+                                    className="w-full p-2 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none bg-white"
+                                >
+                                    <option value="">All Companies</option>
+                                    {uniqueCompanies.map((c, i) => <option key={i} value={c}>{c}</option>)}
+                                </select>
+                            </div>
+
+                            {/* Card No Filter */}
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 mb-2 uppercase">Card No</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="Search card no..." 
+                                    value={filters.cardNo} 
+                                    onChange={(e) => setFilters({...filters, cardNo: e.target.value})}
+                                    className="w-full p-2 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none"
+                                />
+                            </div>
+
+                            {/* Name Filter */}
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 mb-2 uppercase">Employee Name</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="Search name..." 
+                                    value={filters.name} 
+                                    onChange={(e) => setFilters({...filters, name: e.target. value})}
+                                    className="w-full p-2 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none"
+                                />
+                            </div>
+
+                            {/* Salary Min Filter */}
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 mb-2 uppercase">Min Salary</label>
+                                <input 
+                                    type="number" 
+                                    placeholder="Min salary..." 
+                                    value={filters.salary_min} 
+                                    onChange={(e) => setFilters({...filters, salary_min: e.target.value})}
+                                    className="w-full p-2 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none"
+                                />
+                            </div>
+
+                            {/* Salary Max Filter */}
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 mb-2 uppercase">Max Salary</label>
+                                <input 
+                                    type="number" 
+                                    placeholder="Max salary..." 
+                                    value={filters. salary_max} 
+                                    onChange={(e) => setFilters({...filters, salary_max: e.target.value})}
+                                    className="w-full p-2 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none"
+                                />
+                            </div>
+
+                            {/* Reset Button */}
+                            <div className="flex items-end">
+                                <button 
+                                    onClick={handleResetFilters}
+                                    className="w-full p-2 bg-red-50 border border-red-200 text-red-600 font-bold rounded-lg hover:bg-red-100 transition-colors text-sm"
+                                >
+                                    Reset Filters
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="text-xs text-slate-500">
+                            Showing <span className="font-bold text-blue-600">{filtered.length}</span> of <span className="font-bold">{data.employees.length}</span> employees
+                        </div>
+                    </div>
+                )}
+
+                {/* Row 3: Action Buttons */}
+                {/* Row 3: Action Buttons */}
+<div className="flex flex-wrap gap-2 items-center">
+  {/* Selection Controls - visible only when there are selections */}
+  {selectedIds.length > 0 && (
+    <>
+      <button
+        onClick={handleSelectAll}
+        className="px-4 py-3 bg-slate-100 text-slate-700 border border-slate-200 font-bold rounded-xl hover:bg-slate-200 transition-all flex items-center gap-2 text-sm"
+      >
+        <input
+          type="checkbox"
+          checked={selectedIds.length === filtered.length && filtered.length > 0}
+          readOnly
+          className="w-4 h-4"
+        />
+        {selectedIds.length === filtered.length ? 'Deselect All' : 'Select All'}
+      </button>
+
+      <span className="px-3 py-2 bg-blue-100 text-blue-700 rounded-lg text-xs font-bold">
+        {selectedIds.length} Selected
+      </span>
+
+      <button
+        onClick={handleBulkDelete}
+        className="px-4 py-3 bg-red-50 text-red-600 border border-red-100 font-bold rounded-xl hover:bg-red-100 transition-all flex items-center gap-2 text-sm"
+      >
+        <Icon name="trash" className="w-4 h-4" /> Delete
+      </button>
+
+      <button
+        onClick={handleBulkPrint}
+        className="px-4 py-3 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-900 transition-all flex items-center gap-2 text-sm shadow-md"
+      >
+        <Icon name="printer" className="w-4 h-4" /> Print
+      </button>
+    </>
+  )}
+
+  {/* Always-visible controls */}
+  <div className="flex items-center gap-2">
+    <div className="relative group">
+      <button className="px-4 py-3 bg-white border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center gap-2 text-sm shadow-sm">
+        <Icon name="upload" className="w-4 h-4" /> <span className="hidden sm:inline">Import</span>
+      </button>
+      <input type="file" accept=".csv" onChange={handleBulkImport} className="absolute inset-0 opacity-0 cursor-pointer" />
+    </div>
+
+    <button
+      onClick={downloadSampleCSV}
+      className="px-4 py-3 bg-white border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center gap-2 text-sm shadow-sm"
+      title="Download Sample CSV"
+    >
+      <Icon name="download" className="w-4 h-4" /> <span className="hidden sm:inline">Sample</span>
+    </button>
+
+    <button
+      onClick={handleSaveBatch}
+      className="px-4 py-3 bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold rounded-xl hover:bg-emerald-100 transition-all flex items-center gap-2 text-sm shadow-sm"
+    >
+      <Icon name="save" className="w-4 h-4" /> <span className="hidden sm:inline">Save Batch</span>
+    </button>
+
+    <button
+      onClick={() => { setEditingEmployee(null); setModalOpen(true); }}
+      className="px-4 md:px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all flex items-center gap-2 text-sm shadow-lg shadow-blue-500/30"
+    >
+      <Icon name="plus" className="w-4 h-4" /> Add
+    </button>
+  </div>
+</div>
+                
+            </div>
+
+            {/* Table */}
+            <div className="flex-1 overflow-auto overflow-x-auto">
+                <table className="w-full text-left border-collapse text-sm min-w-[800px]">
+                    <thead className="bg-slate-50 sticky top-0 z-10 shadow-sm">
+                        <tr>
+                            <th className="p-4 w-12">
+                                <input 
+                                    type="checkbox" 
+                                    onChange={handleSelectAll}
+                                    checked={selectedIds.length === filtered.length && filtered.length > 0} 
+                                />
+                            </th>
+                            <th className="p-4 font-bold text-slate-500 uppercase text-xs">Card</th>
+                            <th className="p-4 font-bold text-slate-500 uppercase text-xs">Name</th>
+                            <th className="p-4 font-bold text-slate-500 uppercase text-xs">Company</th>
+                            <th className="p-4 font-bold text-slate-500 uppercase text-xs text-right">Basic</th>
+                            <th className="p-4 font-bold text-slate-500 uppercase text-xs text-right">Net Pay</th>
+                            <th className="p-4 font-bold text-slate-500 uppercase text-xs text-center w-32">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                        {filtered.length === 0 ? (
+                            <tr>
+                                <td colSpan="7" className="p-8 text-center text-slate-400 font-bold">
+                                    No employees found matching your filters
+                                </td>
+                            </tr>
+                        ) : (
+                            filtered.map(e => (
+                                <tr key={e.id} className="hover:bg-slate-50 transition-colors">
+                                    <td className="p-4">
+                                        <input 
+                                            type="checkbox" 
+                                            checked={selectedIds.includes(e.id)} 
+                                            onChange={() => { 
+                                                if (selectedIds.includes(e.id)) 
+                                                    setSelectedIds(selectedIds.filter(sid => sid !== e.id)); 
+                                                else 
+                                                    setSelectedIds([...selectedIds, e.id]); 
+                                            }} 
+                                        />
+                                    </td>
+                                    <td className="p-4 font-mono text-slate-600">{e.cardNo}</td>
+                                    <td className="p-4 font-bold text-slate-800">{e.name}</td>
+                                    <td className="p-4 text-xs text-slate-500">{e.company}</td>
+                                    <td className="p-4 text-right font-medium">{e.salary}</td>
+                                    <td className="p-4 text-right font-black text-emerald-600">{calcNet(e)}</td>
+                                    <td className="p-4 text-center flex justify-center gap-2">
+                                        <button onClick={() => { setPreviewItem(e); setPreviewMode(true); }} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"><Icon name="dashboard" className="w-5 h-5"/></button>
+                                        <button onClick={() => { setEditingEmployee(e); setModalOpen(true); }} className="p-2 text-blue-500 hover:bg-blue-50 rounded"><Icon name="edit" className="w-5 h-5"/></button>
+                                        <button onClick={() => handleDeleteSingle(e. id)} className="p-2 text-red-500 hover: bg-red-50 rounded"><Icon name="trash"/></button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+};
+
+    const HistoryTab = ({ data, api, empDetailsFields, customFields, openSigPad, getSignatureImage }) => {
+    const [viewBatch, setViewBatch] = useState(null);
+    const [search, setSearch] = useState("");
+    const [selIds, setSelIds] = useState([]);
+    const [previewMode, setPreviewMode] = useState(false);
+    const [previewItem, setPreviewItem] = useState(null);
+    
+    // --- NEW FILTER STATES ---
+    const [filterOpen, setFilterOpen] = useState(false);
+    const [batchFilters, setBatchFilters] = useState({
+        company: "",
+        cardNo: "",
+        name: "",
+        salary_min: "",
+        salary_max: ""
+    });
+    
+    // --- PAYSLIP COMPONENT (COPIED FROM PAYROLL TAB) ---
+    const PayslipComponent = ({ item }) => (
+        <div className="payslip-container" style={{fontFamily: '"Times New Roman", serif', backgroundColor: '#ffffff', borderTop: '3px solid #1e40af'}}>
+            {/* HEADER SECTION */}
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '2px solid #1e40af', paddingBottom: '8px', marginBottom: '8px'}}>
+                <div style={{display:  'flex', alignItems: 'center', gap: '12px'}}>
+                    <img src={LOGO_URL} style={{height: '50px', width: '50px', objectFit: 'contain'}} />
+                    <div>
+                        <h1 style={{margin: '0', fontSize: '18px', fontWeight: '900', color: '#1e40af', letterSpacing: '0.5px'}}>PARISHRAM ENTERPRISES</h1>
+                        <p style={{margin: '2px 0 0 0', fontSize: '10px', color: '#64748b', fontWeight: '600'}}>Manpower Supply & Labour Contractor</p>
+                        <p style={{margin: '1px 0 0 0', fontSize: '9px', color: '#94a3b8'}}>CIN/Registration:  XXXXX | Ph: +91-XXXXXXXXXX</p>
+                    </div>
+                </div>
+                <div style={{textAlign: 'right'}}>
+                    <p style={{margin: '0', fontSize: '11px', fontWeight: '700', color: '#1e40af'}}>SALARY SLIP</p>
+                    <p style={{margin: '2px 0 0 0', fontSize: '10px', fontWeight: '600', color: '#333'}}>{new Date().toLocaleString('default', { month: 'long', year: 'numeric' }).toUpperCase()}</p>
+                    <p style={{margin: '2px 0 0 0', fontSize: '9px', color: '#64748b'}}>Site: <strong>{item.company || 'Main Office'}</strong></p>
+                </div>
+            </div>
+
+            {/* EMPLOYEE DETAILS SECTION */}
+            <div style={{marginBottom: '8px'}}>
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap:  '0', borderCollapse: 'collapse'}}>
+                    <div style={{borderRight: '1px solid #cbd5e1', borderBottom: '1px solid #cbd5e1', padding: '6px 8px', backgroundColor: '#f1f5f9'}}>
+                        <p style={{margin: '0 0 2px 0', fontSize: '8px', fontWeight: '700', color: '#475569', textTransform: 'uppercase'}}>Employee Name</p>
+                        <p style={{margin: '0', fontSize: '10px', fontWeight: '700', color: '#0f172a'}}>{item.name}</p>
+                    </div>
+                    <div style={{borderBottom: '1px solid #cbd5e1', padding: '6px 8px', backgroundColor: '#f1f5f9'}}>
+                        <p style={{margin:  '0 0 2px 0', fontSize: '8px', fontWeight: '700', color:  '#475569', textTransform:  'uppercase'}}>ID / Card No</p>
+                        <p style={{margin: '0', fontSize: '10px', fontWeight: '700', color: '#0f172a'}}>{item.cardNo}</p>
+                    </div>
+                    <div style={{borderRight: '1px solid #cbd5e1', borderBottom: '1px solid #cbd5e1', padding: '6px 8px'}}>
+                        <p style={{margin: '0 0 2px 0', fontSize: '8px', fontWeight: '700', color: '#475569', textTransform: 'uppercase'}}>UAN</p>
+                        <p style={{margin: '0', fontSize: '10px', color: '#1e293b'}}>{item. uan || '—'}</p>
+                    </div>
+                    <div style={{borderBottom: '1px solid #cbd5e1', padding:  '6px 8px'}}>
+                        <p style={{margin: '0 0 2px 0', fontSize: '8px', fontWeight: '700', color: '#475569', textTransform: 'uppercase'}}>ESIC No</p>
+                        <p style={{margin: '0', fontSize: '10px', color: '#1e293b'}}>{item. esicNo || '—'}</p>
+                    </div>
+                    <div style={{borderRight:  '1px solid #cbd5e1', borderBottom: '1px solid #cbd5e1', padding: '6px 8px'}}>
+                        <p style={{margin: '0 0 2px 0', fontSize: '8px', fontWeight: '700', color: '#475569', textTransform: 'uppercase'}}>Bank Account</p>
+                        <p style={{margin: '0', fontSize: '10px', color: '#1e293b'}}>{item.accountNumber || '—'}</p>
+                    </div>
+                    <div style={{borderBottom: '1px solid #cbd5e1', padding: '6px 8px'}}>
+                        <p style={{margin: '0 0 2px 0', fontSize:  '8px', fontWeight: '700', color: '#475569', textTransform: 'uppercase'}}>IFSC Code</p>
+                        <p style={{margin: '0', fontSize: '10px', color: '#1e293b'}}>{item.ifscCode || '—'}</p>
+                    </div>
+                    <div style={{borderRight: '1px solid #cbd5e1', padding: '6px 8px'}}>
+                        <p style={{margin: '0 0 2px 0', fontSize: '8px', fontWeight: '700', color: '#475569', textTransform: 'uppercase'}}>Days Worked</p>
+                        <p style={{margin: '0', fontSize: '10px', fontWeight: '600', color: '#0f172a'}}>{item.days}</p>
+                    </div>
+                    <div style={{padding: '6px 8px'}}>
+                        <p style={{margin: '0 0 2px 0', fontSize: '8px', fontWeight: '700', color: '#475569', textTransform: 'uppercase'}}>Hours Worked</p>
+                        <p style={{margin: '0', fontSize: '10px', fontWeight: '600', color: '#0f172a'}}>{item.hrs}</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* EARNINGS & DEDUCTIONS SECTION */}
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0', marginBottom: '6px', borderCollapse: 'collapse', border: '1px solid #1e40af'}}>
+                {/* EARNINGS */}
+                <div>
+                    <div style={{backgroundColor: '#1e40af', color: 'white', padding: '6px 8px', fontWeight: '700', fontSize: '10px', textAlign: 'center', borderBottom: '1px solid #1e40af', letterSpacing: '0.5px'}}>EARNINGS</div>
+                    <div style={{display: 'flex', justifyContent: 'space-between', padding: '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize: '9px'}}><span>Basic Salary</span><span style={{fontWeight: '600'}}>{item.salary}</span></div>
+                    <div style={{display:  'flex', justifyContent:  'space-between', padding:  '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize:  '9px'}}><span>Wages/Stipend</span><span style={{fontWeight: '600'}}>{item.wages}</span></div>
+                    <div style={{display: 'flex', justifyContent: 'space-between', padding: '4px 8px', borderBottom:  '1px solid #e2e8f0', fontSize: '9px'}}><span>HRA</span><span style={{fontWeight: '600'}}>{item. hra}</span></div>
+                    <div style={{display:  'flex', justifyContent:  'space-between', padding:  '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize:  '9px'}}><span>Bonus/Incentive</span><span style={{fontWeight: '600'}}>{item.bonus}</span></div>
+                    <div style={{display:  'flex', justifyContent:  'space-between', padding:  '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize:  '9px'}}><span>Overtime</span><span style={{fontWeight: '600'}}>{item. ot}</span></div>
+                    <div style={{display: 'flex', justifyContent: 'space-between', padding: '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize: '9px'}}><span>Miscellaneous</span><span style={{fontWeight: '600'}}>{item.misc}</span></div>
+                    <div style={{display: 'flex', justifyContent: 'space-between', padding: '5px 8px', backgroundColor: '#1e40af', color: 'white', fontWeight: '700', fontSize: '9px'}}><span>GROSS EARNINGS</span><span>{formatCurrency(calcEarnings(item))}</span></div>
+                </div>
+
+                {/* DEDUCTIONS */}
+                <div style={{borderLeft: '1px solid #1e40af'}}>
+                    <div style={{backgroundColor: '#1e40af', color: 'white', padding: '6px 8px', fontWeight: '700', fontSize: '10px', textAlign: 'center', borderBottom: '1px solid #1e40af', letterSpacing: '0.5px'}}>DEDUCTIONS</div>
+                    <div style={{display:  'flex', justifyContent:  'space-between', padding:  '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize:  '9px'}}><span>Provident Fund (PF)</span><span style={{fontWeight: '600'}}>{item.pf}</span></div>
+                    <div style={{display: 'flex', justifyContent: 'space-between', padding: '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize: '9px'}}><span>ESIC</span><span style={{fontWeight:  '600'}}>{item.esic}</span></div>
+                    <div style={{display: 'flex', justifyContent: 'space-between', padding: '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize: '9px'}}><span>Professional Tax</span><span style={{fontWeight: '600'}}>{item.pt}</span></div>
+                    <div style={{display: 'flex', justifyContent: 'space-between', padding: '4px 8px', borderBottom:  '1px solid #e2e8f0', fontSize: '9px'}}><span>Advance/Loan</span><span style={{fontWeight:  '600'}}>{item.advance}</span></div>
+                    <div style={{display: 'flex', justifyContent: 'space-between', padding: '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize: '9px'}}><span>Food/Canteen</span><span style={{fontWeight: '600'}}>{item.food}</span></div>
+                    <div style={{display:  'flex', justifyContent:  'space-between', padding:  '4px 8px', borderBottom: '1px solid #e2e8f0', fontSize:  '9px'}}><span>Welfare/Other</span><span style={{fontWeight: '600'}}>{Number(item.gwlf)+Number(item.trn)+Number(item.rr)}</span></div>
+                    <div style={{display: 'flex', justifyContent: 'space-between', padding: '5px 8px', backgroundColor: '#1e40af', color: 'white', fontWeight: '700', fontSize: '9px'}}><span>TOTAL DEDUCTIONS</span><span>{formatCurrency(calcDeductions(item))}</span></div>
+                </div>
+            </div>
+
+            {/* NET SALARY SECTION */}
+            <div style={{backgroundColor: '#0f172a', color: 'white', padding: '8px 12px', marginBottom: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #1e40af', borderTop: 'none'}}>
+                <div style={{fontSize: '9px', fontWeight: '600', letterSpacing: '1px', textTransform: 'uppercase'}}>Net Salary Payable</div>
+                <div style={{fontSize: '14px', fontWeight: '900'}}>{formatCurrency(calcNet(item))}</div>
+            </div>
+
+            {/* FOOTER SECTION WITH SIGNATURES */}
+            <div style={{marginTop: '12px', pageBreakInside: 'avoid'}}>
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '0'}}>
+                    {/* Employee Signature */}
+                    <div style={{textAlign: 'center', pageBreakInside: 'avoid'}}>
+                        <div style={{borderBottom: '1px solid #1e40af', paddingBottom: '4px', minHeight: '35px', display: 'flex', alignItems:  'center', justifyContent:  'center'}}>
+                            {getSignatureImage('employee') && <img src={getSignatureImage('employee')} style={{maxHeight: '30px', maxWidth: '80px', objectFit: 'contain'}} />}
+                        </div>
+                        <p style={{margin: '4px 0 0 0', fontSize: '9px', fontWeight: '700', color: '#0f172a'}}>Employee Signature</p>
+                        <p style={{margin: '1px 0 0 0', fontSize: '8px', color: '#64748b'}}>Employee</p>
+                    </div>
+
+                    {/* HR/Manager Signature */}
+                    <div style={{textAlign: 'center', pageBreakInside:  'avoid'}}>
+                        <div style={{borderBottom: '1px solid #1e40af', paddingBottom: '4px', minHeight: '35px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                            {getSignatureImage('hr') && <img src={getSignatureImage('hr')} style={{maxHeight: '30px', maxWidth: '80px', objectFit: 'contain'}} />}
+                        </div>
+                        <p style={{margin:  '4px 0 0 0', fontSize: '9px', fontWeight: '700', color:  '#0f172a'}}>HR/Manager Signature</p>
+                        <p style={{margin:  '1px 0 0 0', fontSize: '8px', color: '#64748b'}}>HR Manager</p>
+                    </div>
+
+                    {/* Director/Owner Signature */}
+                    <div style={{textAlign: 'center', pageBreakInside:  'avoid'}}>
+                        <div style={{borderBottom: '2px solid #1e40af', paddingBottom: '4px', minHeight: '35px', display: 'flex', alignItems:  'center', justifyContent:  'center'}}>
+                            <span style={{fontSize: '8px', color: '#94a3b8'}}>[Signature Area]</span>
+                        </div>
+                        <p style={{margin: '4px 0 0 0', fontSize: '9px', fontWeight: '700', color: '#0f172a'}}>Authorized Signatory</p>
+                        <p style={{margin: '1px 0 0 0', fontSize: '8px', color: '#64748b'}}>Director/Owner</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* FOOTER NOTE */}
+            <div style={{marginTop: '10px', padding: '6px 8px', backgroundColor: '#f1f5f9', borderLeft: '3px solid #1e40af', fontSize: '8px', color: '#475569', lineHeight: '1.3'}}>
+                <p style={{margin: '0'}}>This is a computer-generated payslip and does not require signature.  Please verify the details and contact HR for any discrepancies.</p>
+            </div>
+        </div>
+    );
+
+    // --- PRINT FUNCTION ---
+    const handlePrintPayslips = () => {
+        const printableArea = document.getElementById('printable-area-history');
+        if (!printableArea) {
+            alert('No content to print');
+            return;
+        }
+        const printContent = printableArea.innerHTML;
+        const printWindow = window.open('', '', 'width=800,height=600');
+        if (! printWindow) {
+            alert('Please disable popup blockers and try again');
+            return;
+        }
+        let htmlContent = `
+            <html>
+            <head>
+                <title>Payslip Print</title>
+                <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    html, body { width: 100%; height: 100%; }
+                    @page { size: A4; margin:  0; }
+                    @media print {
+                        body { margin: 0; padding: 0; }
+                        .payslip-container { page-break-after: always; page-break-inside: avoid; margin: 0; padding: 5mm; }
+                    }
+                    body { font-family: Arial, sans-serif; background:  white; margin: 0; padding: 0; }
+                    .payslip-container { border: none; margin: 0; padding: 5mm; width: 100%; break-after: page; break-inside: avoid; }
+                </style>
+            </head>
+            <body>
+                ${printContent}
+            </body>
+            </html>
+        `;
+        printWindow.document.write(htmlContent);
+        printWindow. document.close();
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 250);
+    };
+    
+    const handleBulkPrint = (items) => {
+        setPreviewItem({ isBulk: true, employees: items });
+        setPreviewMode(true);
+    };
+
+    // --- PREVIEW MODAL (HISTORY TAB) ---
+    if (previewMode && previewItem) {
+        const slips = previewItem.isBulk ? previewItem. employees : [previewItem];
+        if (! slips || slips.length === 0) {
+            return (
+                <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[100] flex items-center justify-center p-0 md:p-4">
+                    <div className="bg-white rounded-lg shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col h-full md:max-h-[90vh]">
+                        <div className="p-4 border-b flex justify-between items-center bg-slate-50 shrink-0 no-print">
+                            <h3 className="font-bold text-lg">Payslip Preview (History)</h3>
+                            <button onClick={() => {setPreviewMode(false); setPreviewItem(null);}} className="p-2 hover:bg-slate-200 rounded-full"><Icon name="logout" className="w-5 h-5"/></button>
+                        </div>
+                        <div className="p-8 flex items-center justify-center text-slate-500 flex-1">No payslips to display</div>
+                    </div>
+                </div>
+            );
+        }
+        return (
+            <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[100] flex items-center justify-center p-0 md:p-4">
+                <div className="bg-white rounded-lg shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col h-full md:max-h-[90vh]">
+                    <div className="p-4 border-b flex justify-between items-center bg-slate-50 shrink-0 no-print">
+                        <h3 className="font-bold text-lg">Payslip Preview (History)</h3>
+                        <div className="flex gap-2">
+                            <button onClick={handlePrintPayslips} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold flex items-center gap-2"><Icon name="printer" className="w-4 h-4"/> Print</button>
+                            <button onClick={() => {setPreviewMode(false); setPreviewItem(null);}} className="p-2 hover:bg-slate-200 rounded-full"><Icon name="logout" className="w-5 h-5"/></button>
+                        </div>
+                    </div>
+                    <div className="p-4 md:p-8 overflow-y-auto bg-white flex-1" id="printable-area-history">
+                        {slips.map((item, idx) => (
+                            <PayslipComponent key={idx} item={item} />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // BATCH VIEW MODAL WITH FILTERS
+    if (viewBatch) {
+        // Get unique companies from this batch
+        const uniqueCompanies = [...new Set(viewBatch.data.map(e => e.company).filter(Boolean))];
+
+        // Apply filters
+        const filteredBatch = viewBatch.data. filter(e => {
+            // Company filter
+            if (batchFilters.company && e.company !== batchFilters. company) return false;
+            
+            // Card No filter
+            if (batchFilters.cardNo && ! e.cardNo?. toString().includes(batchFilters. cardNo)) return false;
+            
+            // Name filter
+            if (batchFilters.name && !e.name?.toLowerCase().includes(batchFilters.name. toLowerCase())) return false;
+            
+            // Salary range filter
+            if (batchFilters.salary_min && Number(e.salary || 0) < Number(batchFilters.salary_min)) return false;
+            if (batchFilters.salary_max && Number(e.salary || 0) > Number(batchFilters.salary_max)) return false;
+            
+            // Search filter
+            if (search) {
+                const searchLower = search.toLowerCase();
+                if (!e.name?.toLowerCase().includes(searchLower) && !e.cardNo?.toString().includes(searchLower)) {
+                    return false;
+                }
+            }
+            
+            return true;
+        });
+
+        const handleResetBatchFilters = () => {
+            setBatchFilters({
+                company:  "",
+                cardNo: "",
+                name: "",
+                salary_min: "",
+                salary_max:  ""
+            });
+            setSearch("");
+        };
+
+        const handleSelectAll = () => {
+            if (selIds.length === filteredBatch. length) {
+                setSelIds([]);
+            } else {
+                setSelIds(filteredBatch.map(e => e. id || e. name));
+            }
+        };
+
+        return (
+            <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[100] flex items-center justify-center p-0 md:p-4">
+                <div className="bg-white w-full max-w-6xl md:rounded-2xl shadow-2xl flex flex-col h-full md: max-h-[95vh] overflow-hidden">
+                    
+                    {/* HEADER */}
+                    <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 md:rounded-t-2xl shrink-0">
+                        <div>
+                            <h3 className="font-bold text-xl text-slate-800">{viewBatch.name}</h3>
+                            <p className="text-sm text-slate-500">{viewBatch.date} • {filteredBatch.length} of {viewBatch.data.length} Employees</p>
+                        </div>
+                        <button onClick={() => { setViewBatch(null); setSearch(""); setBatchFilters({company: "", cardNo: "", name: "", salary_min: "", salary_max: ""}); }} className="p-2 bg-slate-100 rounded-full hover:bg-slate-200 transition-colors"><Icon name="x"/></button>
+                    </div>
+
+                    {/* SEARCH BAR */}
+                    <div className="p-4 bg-slate-50 border-b border-slate-100 flex flex-col gap-3">
+                        <div className="flex gap-2">
+                            <div className="relative group flex-1">
+                                <Icon name="search" className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"/>
+                                <input 
+                                    className="w-full pl-9 pr-3 py-2 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none" 
+                                    placeholder="Search Name or Card No..." 
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
+                            </div>
+                            <button 
+                                onClick={() => setFilterOpen(! filterOpen)} 
+                                className={`px-4 py-2 border rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${filterOpen ? 'bg-blue-100 border-blue-300 text-blue-700' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+                            >
+                                <Icon name="search" className="w-4 h-4"/> Filters
+                            </button>
+                        </div>
+
+                        {/* FILTER PANEL */}
+                        {filterOpen && (
+                            <div className="p-3 bg-white border-2 border-blue-200 rounded-lg space-y-3">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+                                    {/* Company Filter */}
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Company</label>
+                                        <select 
+                                            value={batchFilters.company} 
+                                            onChange={(e) => setBatchFilters({... batchFilters, company: e.target.value})}
+                                            className="w-full p-2 border border-slate-200 rounded-lg text-xs focus:border-blue-500 outline-none"
+                                        >
+                                            <option value="">All</option>
+                                            {uniqueCompanies.map((c, i) => <option key={i} value={c}>{c}</option>)}
+                                        </select>
+                                    </div>
+
+                                    {/* Card No Filter */}
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Card No</label>
+                                        <input 
+                                            type="text" 
+                                            placeholder="Search..." 
+                                            value={batchFilters.cardNo} 
+                                            onChange={(e) => setBatchFilters({...batchFilters, cardNo: e.target.value})}
+                                            className="w-full p-2 border border-slate-200 rounded-lg text-xs focus:border-blue-500 outline-none"
+                                        />
+                                    </div>
+
+                                    {/* Name Filter */}
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Name</label>
+                                        <input 
+                                            type="text" 
+                                            placeholder="Search..." 
+                                            value={batchFilters.name} 
+                                            onChange={(e) => setBatchFilters({... batchFilters, name: e.target.value})}
+                                            className="w-full p-2 border border-slate-200 rounded-lg text-xs focus:border-blue-500 outline-none"
+                                        />
+                                    </div>
+
+                                    {/* Salary Min */}
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Min Salary</label>
+                                        <input 
+                                            type="number" 
+                                            placeholder="Min..." 
+                                            value={batchFilters.salary_min} 
+                                            onChange={(e) => setBatchFilters({... batchFilters, salary_min: e.target.value})}
+                                            className="w-full p-2 border border-slate-200 rounded-lg text-xs focus:border-blue-500 outline-none"
+                                        />
+                                    </div>
+
+                                    {/* Salary Max */}
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Max Salary</label>
+                                        <input 
+                                            type="number" 
+                                            placeholder="Max..." 
+                                            value={batchFilters.salary_max} 
+                                            onChange={(e) => setBatchFilters({...batchFilters, salary_max: e. target.value})}
+                                            className="w-full p-2 border border-slate-200 rounded-lg text-xs focus:border-blue-500 outline-none"
+                                        />
+                                    </div>
+                                </div>
+
+                                <button 
+                                    onClick={handleResetBatchFilters}
+                                    className="w-full p-2 bg-red-50 border border-red-200 text-red-600 font-bold rounded-lg hover:bg-red-100 transition-colors text-xs uppercase"
+                                >
+                                    Reset Filters
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* TABLE */}
+                    <div className="flex-1 overflow-y-auto overflow-x-auto">
+                        <table className="w-full text-left text-sm min-w-[600px]">
+                            <thead className="bg-slate-50 text-slate-500 sticky top-0">
+                                <tr>
+                                    <th className="p-3 w-10">
+                                        <input 
+                                            type="checkbox" 
+                                            onChange={handleSelectAll}
+                                            checked={selIds.length === filteredBatch.length && filteredBatch.length > 0}
+                                        />
+                                    </th>
+                                    <th className="p-3 font-bold">Card No</th>
+                                    <th className="p-3 font-bold">Name</th>
+                                    <th className="p-3 font-bold">Company</th>
+                                    <th className="p-3 font-bold text-right">Salary</th>
+                                    <th className="p-3 font-bold text-right">Net Pay</th>
+                                    <th className="p-3 font-bold text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                                {filteredBatch.length === 0 ? (
+                                    <tr>
+                                        <td colSpan="7" className="p-8 text-center text-slate-400 font-bold">
+                                            No employees found matching filters
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    filteredBatch.map((employee, idx) => (
+                                        <tr key={idx} className="hover:bg-slate-50">
+                                            <td className="p-3">
+                                                <input 
+                                                    type="checkbox" 
+                                                    checked={selIds.includes(employee.id || employee.name)}
+                                                    onChange={(e) => {
+                                                        const id = employee.id || employee.name;
+                                                        if (e. target.checked) {
+                                                            setSelIds([...selIds, id]);
+                                                        } else {
+                                                            setSelIds(selIds. filter(sid => sid !== id));
+                                                        }
+                                                    }}
+                                                />
+                                            </td>
+                                            <td className="p-3 font-mono text-slate-600">{employee.cardNo}</td>
+                                            <td className="p-3 font-bold">{employee.name}</td>
+                                            <td className="p-3 text-xs text-slate-500">{employee. company}</td>
+                                            <td className="p-3 text-right font-medium">{employee.salary}</td>
+                                            <td className="p-3 text-right font-bold text-emerald-600">{calcNet(employee)}</td>
+                                            <td className="p-3 text-center">
+                                                <button onClick={() => handleBulkPrint([employee])} title="Print Slip" className="text-blue-600 hover:bg-blue-50 p-2 rounded transition-colors">
+                                                    <Icon name="printer" className="w-4 h-4"/>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* FOOTER */}
+                    <div className="p-6 border-t border-slate-100 bg-slate-50 md:rounded-b-2xl flex justify-between gap-3 safe-area-bottom shrink-0">
+                        <div className="flex items-center gap-2">
+                            {selIds.length > 0 && (
+                                <>
+                                    <span className="text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1 rounded-lg">
+                                        {selIds.length} Selected
+                                    </span>
+                                    <button 
+                                        onClick={() => handleBulkPrint(filteredBatch. filter(e => selIds.includes(e.id || e.name)))}
+                                        className="px-4 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 shadow-lg flex items-center gap-2 text-sm"
+                                    >
+                                        <Icon name="printer" className="w-4 h-4"/> Print Selected
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                        <div className="flex gap-3">
+                            <button onClick={() => { if(confirm('Delete this batch history?')) { api('delete_batch&id=' + viewBatch.id); setViewBatch(null); } }} className="px-4 py-2 text-red-600 font-bold hover:bg-red-50 rounded-lg text-sm">Delete Batch</button>
+                            <button onClick={() => { handleBulkPrint(filteredBatch. length > 0 ? filteredBatch :  viewBatch.data); }} className="px-6 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 shadow-lg flex items-center gap-2 text-sm"><Icon name="printer" className="w-4 h-4"/> Print All</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="grid grid-cols-1 md: grid-cols-3 gap-6 animate-fade-in">
+            {data.history.map(h => (
+                <div key={h.id} className="glass-card p-6 md:p-8 rounded-[2rem] bg-white shadow-sm hover:shadow-lg transition-all border border-slate-200 cursor-pointer" onClick={() => {setViewBatch(h); setFilterOpen(false);}}>
+                    <h3 className="font-black text-xl text-slate-800">{h.name}</h3>
+                    <p className="text-xs font-bold text-slate-400 uppercase mb-8">{h.date}</p>
+                    <div className="flex justify-between items-end border-t border-slate-100 pt-6">
+                        <span className="text-3xl font-black text-blue-600">{h.data. length}</span>
+                        <div className="text-xs text-slate-400 font-bold uppercase">Click to Open</div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+    const FormsTab = ({ data, api, logActivity, companies, appFormFields, customFields, openSigPad, activeSignatures, setActiveSignatures, defaultSigs, getSignatureImage }) => {
+        const [viewType, setViewType] = useState('menu'); 
+        const [editingApp, setEditingApp] = useState(null);
+        const [uploadedFiles, setUploadedFiles] = useState({});
+        const [selectedCompany, setSelectedCompany] = useState("");
+        const [searchTerm, setSearchTerm] = useState("");
+        const [formData, setFormData] = useState({}); // New State for Controlled Form
+
+        // When editing an app, initialize form data
+        useEffect(() => {
+            if (editingApp && editingApp.data) {
+                setFormData(editingApp.data);
+                setSelectedCompany(editingApp.data.company || "");
+                if(editingApp.data.signatures) setActiveSignatures(editingApp.data.signatures);
+                else setActiveSignatures({ hr: null, contractor: null, employee: null });
+            } else {
+                setFormData({});
+                setSelectedCompany("");
+                setActiveSignatures({ hr: null, contractor: null, employee: null });
+            }
+        }, [editingApp]);
+
+        const handleChange = (e) => {
+            const { name, value } = e.target;
+            setFormData(prev => ({ ...prev, [name]: value }));
+            if (name === 'company') setSelectedCompany(value);
+        };
+
+        const handleSaveApp = (e) => {
+            e.preventDefault();
+            const finalData = { ...formData, ...uploadedFiles, signatures: activeSignatures }; // Save signatures
+            
+            const payload = { 
+                companyName: "Parishram", 
+                date: new Date().toLocaleDateString(), 
+                data: finalData 
+            };
+            if (editingApp && editingApp.id) {
+                payload.id = editingApp.id; // Pass ID for update
+            }
+            
+            api('save_submission', payload);
+            logActivity(editingApp ? "Updated Application" : "New Application", formData.name);
+            setViewType('list');
+            setEditingApp(null);
+            setUploadedFiles({});
+            setFormData({});
+            setActiveSignatures({ hr: null, contractor: null, employee: null }); // Reset sigs
+        };
+
+        const handleFileChange = (e, type) => {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) { alert("File is too large. Max 2MB."); return; }
+                const reader = new FileReader();
+                reader.onloadend = () => { 
+                    setUploadedFiles(prev => ({...prev, [type]: { name: file.name, data: reader.result }}));
+                    // Also update formData for immediate preview if needed
+                    setFormData(prev => ({...prev, [type]: { name: file.name, data: reader.result }}));
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        
+        const deleteApplication = (id) => {
+            if(confirm('Delete this application?')) {
+                api('delete_submission&id=' + id); // Correct GET syntax
+            }
+        };
+
+        // Use formData for rendering, fallback to empty object
+        const d = formData;
+        const isView = false; // Always editable in form view, 'view/edit' logic handled by state population
+
+        if (viewType === 'menu') {
+            return (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in max-w-4xl mx-auto mt-10">
+                    <div className="glass-card p-10 rounded-3xl flex flex-col items-center justify-center text-center cursor-pointer hover:shadow-xl border-2 border-transparent hover:border-blue-500 bg-white" onClick={() => { setEditingApp(null); setViewType('form'); }}>
+                        <div className="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-6"><Icon name="plus" className="w-10 h-10"/></div>
+                        <h3 className="text-2xl font-black text-slate-800 mb-2">New Application</h3>
+                    </div>
+                    <div className="glass-card p-10 rounded-3xl flex flex-col items-center justify-center text-center cursor-pointer hover:shadow-xl border-2 border-transparent hover:border-amber-500 bg-white" onClick={() => setViewType('list')}>
+                        <div className="w-20 h-20 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-6"><Icon name="forms" className="w-10 h-10"/></div>
+                        <h3 className="text-2xl font-black text-slate-800 mb-2">View Applications</h3>
+                    </div>
+                </div>
+            );
+        }
+
+        if (viewType === 'list') {
+            const safeSubmissions = Array.isArray(data.submissions) ? data.submissions : [];
+            const filtered = safeSubmissions.filter(s => (s.data.name || '').toLowerCase().includes(searchTerm.toLowerCase()));
+            
+            return (
+                <div className="glass-card rounded-3xl p-6 bg-white shadow-sm border border-slate-200 w-full flex flex-col">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 shrink-0 gap-4">
+                        <div>
+                            <h2 className="text-xl font-black text-slate-800">Applications List</h2>
+                            <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">{filtered.length} Records Found</p>
+                        </div>
+                        <div className="flex gap-2 w-full md:w-auto">
+                            <div className="relative flex-1 md:w-64">
+                                <Icon name="search" className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"/>
+                                <input 
+                                    className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500" 
+                                    placeholder="Search applicants..." 
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+                            <button onClick={() => setViewType('menu')} className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50">Back</button>
+                        </div>
+                    </div>
+                    <div className="space-y-3 overflow-y-auto flex-1 pr-2 min-h-0">
+                        {filtered.length === 0 ? (
+                            <div className="text-center text-slate-400 p-12 border-2 border-dashed border-slate-100 rounded-2xl">
+                                <p className="font-bold">No applications found.</p>
+                                <p className="text-xs mt-1">Try adjusting your search or create a new application.</p>
+                            </div>
+                        ) : (
+                            filtered.map(s => {
+                                const docs = ['Aadhar Card', 'Resume', 'Passbook', 'Photo'].filter(doc => {
+                                    const key = doc.toLowerCase().replace(' ', '');
+                                    return s.data[key] && s.data[key].data;
+                                });
+                                return (
+                                <div key={s.id} className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 border border-slate-100 rounded-xl hover:bg-slate-50 hover:shadow-sm transition-all gap-4 bg-white">
+                                    <div className="cursor-pointer flex-1 w-full" onClick={() => { setEditingApp(s); setViewType('form'); }}>
+                                        <div className="flex items-center gap-3 mb-1">
+                                            <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-black text-xs shrink-0">
+                                                {(s.data.name || 'U').charAt(0)}
+                                            </div>
+                                            <div>
+                                                <span className="font-bold text-slate-800">{s.data.name || 'Unnamed Application'}</span> 
+                                            </div>
+                                        </div>
+                                        <div className="pl-11">
+                                            <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">{s.date} • {s.companyName}</div>
+                                            <div className="text-xs text-blue-600 font-bold mt-1 bg-blue-50 inline-block px-2 py-1 rounded">{s.data.company || 'No Company Assigned'}</div>
+                                            {docs.length > 0 && (
+                                                <div className="flex gap-2 mt-2 flex-wrap">
+                                                    {docs.map(doc => {
+                                                        const key = doc.toLowerCase().replace(' ', '');
+                                                        const file = s.data[key];
+                                                        return (
+                                                                <button key={doc} onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    const a = document.createElement('a');
+                                                                    a.href = file.data;
+                                                                    a.download = file.name || `${doc}.png`;
+                                                                    a.click();
+                                                                }} className="text-[10px] bg-blue-50 text-blue-600 px-2 py-1 rounded border border-blue-100 flex items-center gap-1 hover:bg-blue-100">
+                                                                    <Icon name="download" className="w-3 h-3"/> {doc}
+                                                                </button>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2 self-end md:self-auto pl-11 md:pl-0 w-full md:w-auto justify-end">
+                                            <button onClick={() => { setEditingApp(s); setViewType('form'); }} className="px-3 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-50 hover:border-slate-300 flex items-center gap-2 shadow-sm transition-all">
+                                                <Icon name="edit" className="w-3 h-3"/> Edit/View
+                                            </button>
+                                            <button onClick={() => { setEditingApp(s); setViewType('form'); setTimeout(() => window.print(), 500); }} className="px-3 py-2 bg-slate-800 text-white rounded-lg text-xs font-bold hover:bg-slate-900 flex items-center gap-2 shadow-md transition-all">
+                                                <Icon name="printer" className="w-3 h-3"/> Print
+                                            </button>
+                                            <button onClick={(e) => { e.stopPropagation(); deleteApplication(s.id); }} className="p-2 text-red-400 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100" title="Delete">
+                                                <Icon name="trash" className="w-4 h-4"/>
+                                            </button>
+                                    </div>
+                                </div>
+                            )})
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div className="fixed inset-0 bg-slate-900/90 z-[70] overflow-y-auto p-0 md:p-4 flex justify-center print-modal-fix">
+                <div className="bg-white w-full max-w-5xl rounded-none md:rounded-3xl shadow-2xl animate-slide-up h-full md:h-fit md:min-h-0 md:max-h-[95vh] flex flex-col print-modal-fix">
+                    <form onSubmit={handleSaveApp} className="flex-1 flex flex-col h-full overflow-hidden">
+                        <div className="p-4 md:p-8 border-b flex justify-between bg-white sticky top-0 z-20 no-print shrink-0">
+                            <div className="flex items-center gap-4"><button type="button" onClick={() => setViewType('list')} className="p-2 hover:bg-slate-200 rounded-full"><Icon name="arrowLeft"/></button><h2 className="text-xl md:text-2xl font-black text-slate-800 truncate max-w-[200px] md:max-w-none">{d.name || 'New Application'}</h2></div>
+                            <div className="flex gap-2"><button type="button" onClick={() => window.print()} className="px-4 py-2 bg-slate-800 text-white rounded-lg font-bold flex items-center gap-2 hover:bg-slate-900 transition-colors"><Icon name="printer" className="w-4 h-4"/> <span className="hidden md:inline">Print</span></button></div>
+                        </div>
+
+                        {/* --- SCREEN VIEW (BEAUTIFUL DATA ENTRY) --- */}
+                        <div className="p-4 md:p-8 bg-slate-50 flex-1 space-y-8 screen-view-only overflow-y-auto">
+                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                {/* Personal Details Card */}
+                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                                    <h3 className="text-lg font-bold text-blue-600 mb-6 border-b border-blue-50 pb-2">Personal Information</h3>
+                                    <div className="space-y-4">
+                                            <div>
+                                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Full Name</label>
+                                                <input name="name" value={d.name || ''} onChange={handleChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" placeholder="Enter full name" />
+                                            </div>
+                                            {appFormFields.fatherName && <div>
+                                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Father's Name</label>
+                                                <input name="fatherName" value={d.fatherName || ''} onChange={handleChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none" />
+                                            </div>}
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                {appFormFields.dob && <div>
+                                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Date of Birth</label>
+                                                    <input name="dob" type="date" value={d.dob || ''} onChange={handleChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none" />
+                                                </div>}
+                                                {appFormFields.gender && <div>
+                                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Gender</label>
+                                                    <select name="gender" value={d.gender || ''} onChange={handleChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none">
+                                                        <option value="">Select</option><option value="Male">Male</option><option value="Female">Female</option>
+                                                    </select>
+                                                </div>}
+                                            </div>
+                                    </div>
+                                </div>
+
+                                {/* Employment Details Card */}
+                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                                    <h3 className="text-lg font-bold text-emerald-600 mb-6 border-b border-emerald-50 pb-2">Employment Details</h3>
+                                    <div className="space-y-4">
+                                            <div>
+                                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Company / Site</label>
+                                                <select name="company" value={selectedCompany} onChange={handleChange} className="w-full p-3 bg-emerald-50/50 border border-emerald-100 rounded-lg text-sm font-bold text-emerald-800 focus:border-emerald-500 outline-none">
+                                                    <option value="">Select Company</option>
+                                                    {companies.map((c, i) => <option key={i} value={c}>{c}</option>)}
+                                                </select>
+                                            </div>
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                {appFormFields.category && <div>
+                                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Category</label>
+                                                    <input name="category" value={d.category || ''} onChange={handleChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-emerald-500 outline-none" />
+                                                </div>}
+                                                {appFormFields.department && <div>
+                                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Department</label>
+                                                    <input name="department" value={d.department || ''} onChange={handleChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-emerald-500 outline-none" />
+                                                </div>}
+                                            </div>
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                {appFormFields.joiningDate && <div>
+                                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Joining Date</label>
+                                                    <input name="doj" type="date" value={d.doj || ''} onChange={handleChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-emerald-500 outline-none" />
+                                                </div>}
+                                                {appFormFields.cardNo && <div>
+                                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Card No</label>
+                                                    <input name="cardNo" value={d.cardNo || ''} onChange={handleChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-emerald-500 outline-none" />
+                                                </div>}
+                                            </div>
+                                    </div>
+                                </div>
+
+                                {/* Official & Bank Card */}
+                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                                    <h3 className="text-lg font-bold text-indigo-600 mb-6 border-b border-indigo-50 pb-2">Official & Bank Info</h3>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                             {appFormFields.adhar && <div className="col-span-1 sm:col-span-2">
+                                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Aadhar Number</label>
+                                                <input name="adhar" value={d.adhar || ''} onChange={handleChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-indigo-500 outline-none tracking-widest" />
+                                            </div>}
+                                            {appFormFields.uan && <div>
+                                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">UAN</label>
+                                                <input name="uan" value={d.uan || ''} onChange={handleChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-indigo-500 outline-none" />
+                                            </div>}
+                                            {appFormFields.esic && <div>
+                                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">ESIC</label>
+                                                <input name="esic" value={d.esic || ''} onChange={handleChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-indigo-500 outline-none" />
+                                            </div>}
+                                            {appFormFields.accountNo && <div className="col-span-1 sm:col-span-2">
+                                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Bank Account No</label>
+                                                <input name="accountNo" value={d.accountNo || ''} onChange={handleChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-indigo-500 outline-none" />
+                                            </div>}
+                                            {appFormFields.ifsc && <div className="col-span-1 sm:col-span-1">
+                                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">IFSC Code</label>
+                                                <input name="ifsc" value={d.ifsc || ''} onChange={handleChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-indigo-500 outline-none" />
+                                            </div>}
+                                    </div>
+                                </div>
+                                
+                                {/* Contact & Address Card */}
+                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                                    <h3 className="text-lg font-bold text-amber-600 mb-6 border-b border-amber-50 pb-2">Contact Details</h3>
+                                    <div className="space-y-4">
+                                            {appFormFields.contactNo && <div>
+                                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Mobile Number</label>
+                                                <input name="contactNo" value={d.contactNo || ''} onChange={handleChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-amber-500 outline-none" />
+                                            </div>}
+                                            {appFormFields.presentAddress && <div>
+                                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Present Address</label>
+                                                <textarea name="presentAddress" value={d.presentAddress || ''} onChange={handleChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-amber-500 outline-none" rows="2"></textarea>
+                                            </div>}
+                                            {appFormFields.permanentAddress && <div>
+                                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Permanent Address</label>
+                                                <textarea name="permanentAddress" value={d.permanentAddress || ''} onChange={handleChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-amber-500 outline-none" rows="2"></textarea>
+                                            </div>}
+                                    </div>
+                                </div>
+                                
+                                {/* Documents & Signatures Card */}
+                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-2">
+                                     <h3 className="text-lg font-bold text-slate-700 mb-6 border-b border-slate-100 pb-2">Documents & Signatures</h3>
+                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                                            {['Aadhar Card', 'Resume', 'Passbook', 'Photo'].map(doc => (
+                                                <div key={doc} className="relative group border-2 border-dashed border-slate-200 rounded-xl p-4 flex flex-col items-center justify-center hover:border-blue-400 hover:bg-blue-50 transition-all cursor-pointer">
+                                                    <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => handleFileChange(e, doc.toLowerCase().replace(' ', ''))} />
+                                                    <Icon name="upload" className="w-6 h-6 text-slate-400 mb-2"/>
+                                                    <span className="text-xs font-bold text-slate-500 uppercase">{doc}</span>
+                                                    {(d[doc.toLowerCase().replace(' ', '')] || uploadedFiles[doc.toLowerCase().replace(' ', '')]) && <span className="absolute top-2 right-2 text-green-500 text-lg">●</span>}
+                                                </div>
+                                            ))}
+                                     </div>
+                                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                                            {['HR', 'Contractor', 'Employee'].map(role => (
+                                                <div key={role} onClick={() => openSigPad(role.toLowerCase())} className="border-2 border-slate-100 rounded-xl p-4 text-center cursor-pointer hover:border-slate-300 relative h-32 flex items-center justify-center bg-slate-50/50">
+                                                    {getSignatureImage(role.toLowerCase()) ? 
+                                                        <img src={getSignatureImage(role.toLowerCase())} className="max-h-20 max-w-full object-contain" /> :
+                                                        <span className="text-xs font-bold text-slate-400 uppercase">Click to Sign<br/>({role})</span>
+                                                    }
+                                                </div>
+                                            ))}
+                                     </div>
+                                </div>
+                             </div>
+                        </div>
+
+                        {/* --- PRINT VIEW (STRICT GRID) --- */}
+                        <div className="hidden print:block p-8 text-sm bg-white print-view-only" id="printable-area">
+                            <div className="relative" style={{ minHeight: '140px' }}>
+                                {/* FORM HEADER */}
+                                <div className="flex flex-row justify-between items-start mb-4 border-b-2 border-black pb-4 border-print-b gap-4 relative">
+                                    <div className="text-left flex-1 pt-2 pr-36">
+                                        <div className="flex items-center gap-4 mb-2">
+                                            <img src={LOGO_URL} className="h-16 object-contain" />
+                                            <div>
+                                                <h1 className="text-2xl font-bold uppercase tracking-tight leading-none">Parishram Enterprises</h1>
+                                                <p className="text-sm font-semibold text-slate-600">Manpower Supply & Labour Contractor</p>
+                                            </div>
+                                        </div>
+                                        {selectedCompany && <h2 className="text-lg font-bold text-slate-800 uppercase mt-2">Site: {selectedCompany}</h2>}
+                                        <p className="font-bold uppercase text-xl border-2 border-black inline-block mt-4 px-6 py-1 bg-slate-100 border-print">Employment Application Form</p>
+                                    </div>
+                                    
+                                    {/* Absolute positioned photo for print reliability - TOP RIGHT */}
+                                    <div className="absolute top-0 right-0 w-32 h-32 border-2 border-black photo-box bg-white flex items-center justify-center text-xs text-slate-400 uppercase font-bold overflow-hidden" style={{marginTop: '0', marginRight: '0'}}>
+                                        {d.photo && d.photo.data ? <img src={d.photo.data} className="w-full h-full object-cover" /> : "Passport Photo"}
+                                    </div>
+                                </div>
+
+                                <div className="text-right text-xs font-bold mb-4">
+                                    <p>Date: {new Date().toLocaleDateString()}</p>
+                                </div>
+
+                                {/* GRID FORM - FORCED BORDER STRUCTURE FOR PRINT */}
+                                <div className="form-container">
+                                    <div className="form-row bg-slate-50">
+                                        <div className="form-cell flex-1">
+                                            <span className="form-label">Company / Site:</span>
+                                            <div className="form-value">{selectedCompany}</div>
+                                        </div>
+                                    </div>
+
+                                    <div className="form-row">
+                                        <div className="form-cell"><span className="form-label">Name:</span> <div className="form-value">{d.name}</div></div>
+                                        {appFormFields.fatherName && <div className="form-cell"><span className="form-label">Father Name:</span> <div className="form-value">{d.fatherName}</div></div>}
+                                    </div>
+
+                                    <div className="form-row">
+                                        {appFormFields.dob && <div className="form-cell"><span className="form-label">DOB:</span> <div className="form-value">{d.dob}</div></div>}
+                                        {appFormFields.gender && <div className="form-cell"><span className="form-label">Gender:</span> <div className="form-value">{d.gender}</div></div>}
+                                    </div>
+
+                                    <div className="form-row">
+                                        {appFormFields.category && <div className="form-cell"><span className="form-label">Category:</span> <div className="form-value">{d.category}</div></div>}
+                                        {appFormFields.department && <div className="form-cell"><span className="form-label">Department:</span> <div className="form-value">{d.department}</div></div>}
+                                    </div>
+
+                                    <div className="form-row">
+                                        {appFormFields.adhar && <div className="form-cell"><span className="form-label">Aadhar No:</span> <div className="form-value">{d.adhar}</div></div>}
+                                        {appFormFields.vaccination && <div className="form-cell"><span className="form-label">Vaccination:</span> <div className="form-value">{d.vaccination}</div></div>}
+                                    </div>
+
+                                    {appFormFields.presentAddress && <div className="form-row"><div className="form-cell"><span className="form-label">Present Addr:</span> <div className="form-value">{d.presentAddress}</div></div></div>}
+                                    {appFormFields.permanentAddress && <div className="form-row"><div className="form-cell"><span className="form-label">Perm Addr:</span> <div className="form-value">{d.permanentAddress}</div></div></div>}
+
+                                    <div className="form-row">
+                                        {appFormFields.joiningDate && <div className="form-cell"><span className="form-label">Joining Date:</span> <div className="form-value">{d.doj}</div></div>}
+                                        {appFormFields.cardNo && <div className="form-cell"><span className="form-label">Card No:</span> <div className="form-value">{d.cardNo}</div></div>}
+                                    </div>
+
+                                    <div className="form-row">
+                                        {appFormFields.education && <div className="form-cell"><span className="form-label">Education:</span> <div className="form-value">{d.education}</div></div>}
+                                        {appFormFields.uan && <div className="form-cell"><span className="form-label">UAN No:</span> <div className="form-value">{d.uan}</div></div>}
+                                    </div>
+
+                                    <div className="form-row">
+                                        {appFormFields.contactNo && <div className="form-cell"><span className="form-label">Contact No:</span> <div className="form-value">{d.contactNo}</div></div>}
+                                        {appFormFields.esic && <div className="form-cell"><span className="form-label">ESIC No:</span> <div className="form-value">{d.esic}</div></div>}
+                                    </div>
+
+                                    <div className="form-row">
+                                        {appFormFields.accountNo && <div className="form-cell"><span className="form-label">Account No:</span> <div className="form-value">{d.accountNo}</div></div>}
+                                        {appFormFields.ifsc && <div className="form-cell"><span className="form-label">IFSC Code:</span> <div className="form-value">{d.ifsc}</div></div>}
+                                    </div>
+
+                                    {/* Custom Fields */}
+                                    {customFields.map(field => (
+                                        <div key={field.id} className="form-row">
+                                            <div className="form-cell"><span className="form-label">{field.label}:</span> <div className="form-value">{d["custom_" + field.id]}</div></div>
+                                        </div>
+                                    ))}
+
+                                    {appFormFields.nominee && <div className="form-row"><div className="form-cell"><span className="form-label">Nominee:</span> <div className="form-value">{d.nominee}</div></div></div>}
+                                </div>
+                                
+                                <div className="signature-row mt-4">
+                                    <div className="signature-block">
+                                        {getSignatureImage('hr') && <img src={getSignatureImage('hr')} className="signature-img" />}
+                                        <p className="font-bold text-xs uppercase">HR Sign</p>
+                                    </div>
+                                    <div className="signature-block">
+                                        {getSignatureImage('contractor') && <img src={getSignatureImage('contractor')} className="signature-img" />}
+                                        <p className="font-bold text-xs uppercase">Contractor Sign</p>
+                                    </div>
+                                    <div className="signature-block">
+                                        {getSignatureImage('employee') && <img src={getSignatureImage('employee')} className="signature-img" />}
+                                        <p className="font-bold text-xs uppercase">Employee Sign</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* --- UPLOADED DOCUMENTS SECTION (PAGE 2 ONWARDS) --- */}
+                            <div className="uploaded-documents-section">
+                                {(['aadharcard', 'resume', 'passbook', 'photo'].map((docKey, idx) => {
+                                    const file = d[docKey] || uploadedFiles[docKey];
+                                    const docName = docKey === 'aadharcard' ? 'Aadhar Card' : docKey === 'passbook' ? 'Passbook' : docKey === 'resume' ? 'Resume' : 'Photo';
+                                    
+                                    return file ? (
+                                        <div key={idx} className="uploaded-document-item">
+                                            <div style={{ marginBottom: '10px', marginTop: '10px' }}>
+                                                <h3 className="font-bold text-lg uppercase mb-2">{docName}</h3>
+                                                {(file.data || file) && (
+                                                    <div className="document-preview" style={{ maxWidth: '100%', textAlign: 'center' }}>
+                                                        {(file.data || file).includes('data:image') || (file.data || file).includes('data:application/pdf') ? (
+                                                            <img src={file.data || file} style={{ maxWidth: '100%', height: 'auto', border: '1px solid #ccc', padding: '5px' }} />
+                                                        ) : (
+                                                            <p style={{ color: '#666' }}>{file.name || docName} (File attached)</p>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ) : null;
+                                }))}
+                            </div>
+                        </div>
+
+                        {/* Footer Actions (Screen only) */}
+                        <div className="p-4 md:p-6 border-t border-slate-100 flex justify-end gap-4 bg-white sticky bottom-0 z-20 no-print safe-area-bottom">
+                            <button type="button" onClick={() => setViewType('list')} className="px-6 py-3 rounded-xl font-bold text-slate-500 hover:bg-slate-50 transition-colors">Cancel</button>
+                            <button type="submit" className="bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 px-8 py-3 text-sm shadow-lg shadow-blue-500/30 transition-all transform hover:scale-[1.02] flex items-center gap-2">
+                                <Icon name="save" className="w-5 h-5"/> Save Application
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        );
+    };
+
+    const SettingsTab = ({ data, api, logActivity, companies, setCompanies, appFormFields, setAppFormFields, empDetailsFields, setEmpDetailsFields, customFields, setCustomFields, defaultSigs, setDefaultSigs }) => {
+        const [newCustomField, setNewCustomField] = useState("");
+        const [newUser, setNewUser] = useState({ username: '', password: '', role: 'Viewer', permissions: { dashboard: true } });
+        const [newCompany, setNewCompany] = useState("");
+
+        const handleAddUser = () => {
+            if (newUser.username && newUser.password) {
+                const updatedUsers = [...(data.config.users || []), newUser];
+                api('update_config', { ...data.config, users: updatedUsers });
+                setNewUser({ username: '', password: '', role: 'Viewer', permissions: { dashboard: true } });
+                logActivity("Added User", newUser.username);
+            }
+        };
+
+        const handleRemoveUser = (idx) => {
+            const updatedUsers = data.config.users.filter((_, i) => i !== idx);
+            api('update_config', { ...data.config, users: updatedUsers });
+        };
+
+        const handleAddCustomField = () => {
+            if(newCustomField) {
+                setCustomFields([...customFields, { id: Date.now(), label: newCustomField }]);
+                setNewCustomField("");
+            }
+        };
+
+        const handleRemoveCustomField = (id) => {
+            setCustomFields(customFields.filter(f => f.id !== id));
+        };
+
+        const handleAddCompany = () => {
+            if(newCompany && !companies.includes(newCompany)) {
+                setCompanies([...companies, newCompany]);
+                setNewCompany("");
+                alert("Company Added");
+            }
+        };
+
+        const fieldLabels = {
+            fatherName: "Father Name", dob: "Date of Birth", gender: "Gender", category: "Category", 
+            department: "Department", adhar: "Aadhar No", vaccination: "Vaccination Status", 
+            presentAddress: "Present Address", permanentAddress: "Permanent Address", joiningDate: "Joining Date", 
+            cardNo: "Card Number", education: "Education", uan: "UAN Number", contactNo: "Contact No", 
+            esic: "ESIC Number", accountNo: "Bank Account", ifsc: "IFSC Code", nominee: "Nominee",
+            agt: "AGT", esicNo: "ESIC No", accountNumber: "Account Number", ifscCode: "IFSC Code"
+        };
+
+        return (
+            <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 animate-fade-in">
+                
+                {/* 1. APPLICATION FORM FIELDS */}
+                <div className="glass-card p-6 md:p-8 rounded-3xl bg-white">
+                    <h3 className="text-xl font-black mb-6 flex items-center gap-2"><Icon name="forms" className="w-5 h-5"/> Application Form Fields</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        {Object.keys(appFormFields).map(field => (
+                            <label key={field} className="flex items-center gap-2 p-2 border rounded-lg cursor-pointer hover:bg-slate-50 transition-colors">
+                                <input type="checkbox" checked={appFormFields[field]} onChange={(e) => setAppFormFields({...appFormFields, [field]: e.target.checked})} className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500" />
+                                <span className="text-sm font-medium text-slate-700">{fieldLabels[field] || field}</span>
+                            </label>
+                        ))}
+                    </div>
+                </div>
+
+                {/* 2. EMPLOYEE DETAILS FIELDS */}
+                <div className="glass-card p-6 md:p-8 rounded-3xl bg-white">
+                    <h3 className="text-xl font-black mb-6 flex items-center gap-2"><Icon name="payroll" className="w-5 h-5"/> Employee Details & Payslip Fields</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        {Object.keys(empDetailsFields).map(field => (
+                            <label key={field} className="flex items-center gap-2 p-2 border rounded-lg cursor-pointer hover:bg-slate-50 transition-colors">
+                                <input type="checkbox" checked={empDetailsFields[field]} onChange={(e) => setEmpDetailsFields({...empDetailsFields, [field]: e.target.checked})} className="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500" />
+                                <span className="text-sm font-medium text-slate-700">{fieldLabels[field] || field}</span>
+                            </label>
+                        ))}
+                    </div>
+                </div>
+
+                {/* 3. CUSTOM FIELDS */}
+                <div className="glass-card p-6 md:p-8 rounded-3xl bg-white">
+                    <h3 className="text-xl font-black mb-6 flex items-center gap-2"><Icon name="plus" className="w-5 h-5"/> Custom Fields Configuration</h3>
+                    <div className="flex flex-col sm:flex-row gap-4 mb-4">
+                        <input placeholder="New Field Label" className="input-field flex-1 p-3 border rounded-lg" value={newCustomField} onChange={e=>setNewCustomField(e.target.value)} />
+                        <button onClick={handleAddCustomField} className="bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 px-6 py-3 sm:py-0">Add Field</button>
+                    </div>
+                    <div className="space-y-2">
+                        {customFields.map(f => (
+                            <div key={f.id} className="flex justify-between items-center p-3 bg-slate-50 rounded-xl border border-slate-100">
+                                <span className="font-bold text-slate-700">{f.label}</span>
+                                <button onClick={() => handleRemoveCustomField(f.id)} className="text-red-500 hover:text-red-700 font-bold text-xs uppercase tracking-wider">Remove</button>
+                            </div>
+                        ))}
+                        {customFields.length === 0 && <p className="text-sm text-slate-400 italic">No custom fields added.</p>}
+                    </div>
+                </div>
+
+                {/* 4. SIGNATURE SETTINGS */}
+                <div className="glass-card p-6 md:p-8 rounded-3xl bg-white">
+                    <h3 className="text-xl font-black mb-6 flex items-center gap-2"><Icon name="edit" className="w-5 h-5"/> Signature Settings</h3>
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-bold text-slate-700 mb-1">Default HR Signature URL</label>
+                            <input value={defaultSigs.hr} onChange={(e) => setDefaultSigs({...defaultSigs, hr: e.target.value})} className="w-full p-3 border rounded-lg bg-slate-50" placeholder="https://..." />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-slate-700 mb-1">Default Contractor Signature URL</label>
+                            <input value={defaultSigs.contractor} onChange={(e) => setDefaultSigs({...defaultSigs, contractor: e.target.value})} className="w-full p-3 border rounded-lg bg-slate-50" placeholder="https://..." />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-slate-700 mb-1">Default Employee Signature URL (Placeholder)</label>
+                            <input value={defaultSigs.employee} onChange={(e) => setDefaultSigs({...defaultSigs, employee: e.target.value})} className="w-full p-3 border rounded-lg bg-slate-50" placeholder="https://..." />
+                        </div>
+                    </div>
+                </div>
+
+                {/* 5. USER MANAGEMENT */}
+                <div className="glass-card p-6 md:p-8 rounded-3xl">
+                    <h3 className="text-xl font-black mb-6">User Management</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                        <input placeholder="Username" className="input-field w-full p-3 border rounded-lg" value={newUser.username} onChange={e=>setNewUser({...newUser, username: e.target.value})} />
+                        <input placeholder="Password" type="password" className="input-field w-full p-3 border rounded-lg" value={newUser.password} onChange={e=>setNewUser({...newUser, password: e.target.value})} />
+                        <select className="input-field w-full p-3 border rounded-lg" value={newUser.role} onChange={e=>setNewUser({...newUser, role: e.target.value})}><option>Super Admin</option><option>Manager</option><option>Viewer</option></select>
+                        <button onClick={handleAddUser} className="bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 py-3 md:py-0">Add User</button>
+                    </div>
+                    <div className="flex flex-wrap gap-4 mb-6">
+                        {['dashboard', 'payroll', 'history', 'submissions', 'settings'].map(p => (
+                            <label key={p} className="flex items-center gap-2 text-sm uppercase font-bold text-slate-500"><input type="checkbox" checked={newUser.permissions[p]||false} onChange={e => setNewUser({...newUser, permissions: {...newUser.permissions, [p]: e.target.checked}})} /> {p}</label>
+                        ))}
+                    </div>
+                    <div className="space-y-2 border-t pt-4">
+                        {data.config.users?.map((u, i) => (
+                            <div key={i} className="flex justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
+                                <span>{u.username} <span className="text-xs text-slate-400">({u.role})</span></span>
+                                <button onClick={() => handleRemoveUser(i)} className="text-red-500 font-bold text-xs">Remove</button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                    <div className="glass-card p-6 md:p-8 rounded-3xl bg-white">
+                    <h3 className="text-xl font-black mb-6">Company Management</h3>
+                    <div className="flex flex-col md:flex-row gap-4 mb-6">
+                        <input placeholder="New Company Name" className="input-field flex-1 p-3 border rounded-lg" value={newCompany} onChange={e=>setNewCompany(e.target.value)} />
+                        <button onClick={handleAddCompany} className="bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 px-6 py-3 md:py-0">Add Company</button>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                        {companies.map((c, i) => (
+                            <span key={i} className="px-3 py-1 bg-slate-100 rounded-full text-sm border border-slate-200">{c}</span>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    function App() {
+        const [user, setUser] = useState(null);
+        const [tab, setTab] = useState('dashboard');
+        const [data, setData] = useState({ employees: [], history: [], submissions: [], config: null, activityLog: [] });
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState(null);
+        const [isDemo, setIsDemo] = useState(false);
+        
+        // Signature States
+        const [sigPadOpen, setSigPadOpen] = useState(false);
+        const [currentSigField, setCurrentSigField] = useState(null); 
+        const [activeSignatures, setActiveSignatures] = useState({ hr: null, contractor: null, employee: null });
+        
+        // Fixed Company List
+        const [companies, setCompanies] = useState([
+            "SOHONI METAL CRAFT PVT LTD", "A1 FENCE PVT LTD", "TPACK PACKING INDIA PVT LTD",
+            "WESTERN REFRIGERATION PVT LTD", "INTERIOR AND MORE LTD", "COPTEC PRIVATE LIMITED",
+            "AVION EXIM PVT LTD", "ALKON PLASTIC PVT LTD", "SRINI LINK PVT LTD",
+            "MRIDA GREEN & DEVELOPMENT PVT LTD", "KAWA ENGINEERING WORKS", "UMBERCELL COMPONENTS PVT LTD",
+            "JP BISCUITS PVT LTD", "LED X", "CAPTOSUS ELECTRO AUTOMOBILE PVT LTD",
+            "STELLO CONTAINERS LLP", "CLEAR POLYPHASE INDIA PVT LTD", "ROVER WRITING INSTRUMENTS",
+            "HARISH TEXTILE ENGINEERS LIMITED", "NEW BHARAT CYLINDER LLP", "COPTEC COMPANY"
+        ]);
+
+        // Configuration States
+        const [appFormFields, setAppFormFields] = useState({
+            fatherName: true, dob: true, gender: true, category: true, department: true,
+            adhar: true, vaccination: true, presentAddress: true, permanentAddress: true,
+            joiningDate: true, cardNo: true, education: true, uan: true, contactNo: true,
+            esic: true, accountNo: true, ifsc: true, nominee: true
+        });
+
+        const [empDetailsFields, setEmpDetailsFields] = useState({
+            cardNo: true, agt: true, uan: true, esicNo: true, 
+            accountNumber: true, ifscCode: true, contactNo: true
+        });
+
+        const [customFields, setCustomFields] = useState([]); 
+        
+        // Default Signature URLs
+        const [defaultSigs, setDefaultSigs] = useState({ hr: "", contractor: "", employee: "" });
+
+        const [modalOpen, setModalOpen] = useState(false);
+        const [editingEmployee, setEditingEmployee] = useState(null);
+        const [formData, setFormData] = useState({});
+
+        // Initialize form when modal opens or editing employee changes
+        useEffect(() => {
+            if (modalOpen) {
+                if (editingEmployee) {
+                    setFormData({ ...editingEmployee });
+                } else {
+                    setFormData({ name: '', company: '', cardNo: '', salary: '', wages: '', bonus: '', hra: '', ot: '', misc: '', days: '', hrs: '', ph: '', rate: '', days_2: '', rate_2: '', pf: '', esic: '', gwlf: '', pt: '', advance: '', food: '', trn: '', rr: '', leave_amt: '', pf_2: '', trn_2: '', uan: '', esicNo: '', accountNumber: '', ifscCode: '', agt: '', contactNo: '' });
+                }
+            }
+        }, [modalOpen, editingEmployee]);
+
+        const getApiUrl = (query = '') => {
+            // Check if running via file:// protocol or empty hostname
+            if (window.location.protocol === 'file:') return null;
+            if (window.location.hostname === '' || window.location.hostname === 'null') return null;
+            return 'api.php' + query; 
+        };
+
+        const loadDemoData = () => {
+            setIsDemo(true);
+            setData({
+                employees: [
+                    {id: 1, name: "Sample Demo User", company: "SOHONI METAL CRAFT PVT LTD", cardNo: "DEMO001", salary: 25000, days: 26, hrs: 208},
+                    {id: 2, name: "John Doe", company: "LED X", cardNo: "EMP002", salary: 18000, days: 24, hrs: 192}
+                ],
+                history: [],
+                submissions: [{id: 1, companyName: "Parishram", date: "2023-10-25", data: { name: "New Applicant", jobTitle: "Helper", company: "SOHONI METAL CRAFT PVT LTD" }}],
+                config: { users: [{ username: "admin", password: "123", role: "Super Admin", permissions: {dashboard: true, payroll: true, history: true, submissions: true, settings: true} }] },
+                activityLog: [{id: 1, user: "System", action: "Initialized", details: "Demo Mode Started", time: new Date().toLocaleTimeString()}]
+            });
+            setLoading(false);
+        };
+
+        const refresh = async () => {
+            const url = getApiUrl(`?action=get_all`);
+            if (!url) { loadDemoData(); return; }
+            try {
+                const res = await fetch(url);
+                if(!res.ok) throw new Error("Server error");
+                const json = await res.json();
+                if (json.error) throw new Error(json.error);
+                setData(json);
+            } catch (e) { loadDemoData(); } finally { setLoading(false); }
+        };
+
+        useEffect(() => { refresh(); }, []);
+
+        const api = async (action, body = null) => {
+            const actionName = action.split('&')[0];
+            const apiUrl = getApiUrl(`?action=${action}`);
+            const useApi = apiUrl && !isDemo;
+            
+            if (!useApi) {
+                if (actionName === 'save_employee') {
+                    const newEmp = body;
+                    const exists = data.employees.find(e => String(e.id) === String(newEmp.id));
+                    if(exists) { 
+                        setData(prev => ({
+                            ...prev, 
+                            employees: prev.employees.map(e => String(e.id) === String(newEmp.id) ? newEmp : e)
+                        })); 
+                    } else { 
+                        setData(prev => ({ ...prev, employees: [...prev.employees, newEmp] })); 
+                    }
+                }
+                if (actionName === 'delete_employee') {
+                    const id = body ? body.id : getId(action.split('id=')[1]);
+                    if (id !== null) {
+                        setData(prev => ({...prev, employees: prev.employees.filter(e => String(e.id) !== String(id))}));
+                    }
+                }
+                
+                if (actionName === 'save_submission') {
+                    const submissionId = body.id || Date.now();
+                    const newSubmission = { 
+                        id: submissionId, 
+                        companyName: "Parishram", 
+                        date: new Date().toLocaleDateString(), 
+                        data: body.data 
+                    };
+                    
+                    setData(prev => {
+                        const existingIndex = prev.submissions.findIndex(s => s.id === submissionId);
+                        if (existingIndex >= 0) {
+                            const updated = [...prev.submissions];
+                            updated[existingIndex] = newSubmission;
+                            return { ...prev, submissions: updated };
+                        } else {
+                            return { ...prev, submissions: [newSubmission, ...prev.submissions] };
+                        }
+                    });
+                }
+                
+                if (actionName === 'delete_submission') {
+                    const id = body ? body.id : getId(action.split('id=')[1]);
+                    if (id !== null) {
+                         setData(prev => ({...prev, submissions: prev.submissions.filter(s => s.id !== id)}));
+                    }
+                }
+                
+                if (actionName === 'update_config') {
+                    setData(prev => ({ ...prev, config: body }));
+                }
+
+                if (actionName === 'save_batch') setData(prev => ({ ...prev, history: [...prev.history, {id: Date.now(), ...body}] }));
+                
+                if (actionName === 'delete_batch') {
+                    const id = body ? body.id : getId(action.split('id=')[1]);
+                    if (id !== null) {
+                        setData(prev => ({...prev, history: prev.history.filter(h => h.id !== id)}));
+                    }
+                }
+                return;
+            }
+            // Real API call
+            const opt = body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {};
+            try {
+                const res = await fetch(apiUrl, opt);
+                const result = await res.json();
+                
+                if (!res.ok || result.error) {
+                    console.error("API Error:", result.error || "Unknown error", result);
+                    throw new Error(result.error || `HTTP ${res.status}`);
+                }
+                
+                // For save_employee, immediately update state instead of refresh
+                if(actionName === 'save_employee' && body) {
+                    const newEmp = body;
+                    const exists = data.employees.find(e => String(e.id) === String(newEmp.id));
+                    if(exists) {
+                        setData(prev => ({
+                            ...prev,
+                            employees: prev.employees.map(e => String(e.id) === String(newEmp.id) ? newEmp : e)
+                        }));
+                    } else {
+                        setData(prev => ({...prev, employees: [...prev.employees, newEmp]}));
+                    }
+                } else {
+                    // For other actions, refresh data
+                    refresh();
+                }
+            } catch (e) {
+                console.error("API request failed:", e.message, "URL:", apiUrl);
+                // Fallback to demo mode
+                setIsDemo(true);
+                if (actionName === 'save_employee' && body) {
+                    const newEmp = body;
+                    const exists = data.employees.find(e => String(e.id) === String(newEmp.id));
+                    if(exists) {
+                        setData(prev => ({
+                            ...prev,
+                            employees: prev.employees.map(e => String(e.id) === String(newEmp.id) ? newEmp : e)
+                        }));
+                    } else {
+                        setData(prev => ({...prev, employees: [...prev.employees, newEmp]}));
+                    }
+                }
+            }
+        };
+
+         const logActivity = (action, details) => {
+            const newLog = { id: Date.now(), user: user ? user.username : 'System', action, details, time: new Date().toLocaleTimeString() };
+            setData(prev => ({...prev, activityLog: [newLog, ...(prev.activityLog || [])]}));
+        };
+
+        const handleFormChange = (e) => {
+            const { name, value } = e.target;
+            setFormData(prev => ({
+                ...prev,
+                [name]: value
+            }));
+        };
+
+        const handleSaveEmployee = (e) => {
+            e.preventDefault();
+            
+            // MERGE Logic: Spread existing first, then overwrite with form data
+            const emp = editingEmployee ? { ...editingEmployee, ...formData } : formData;
+            
+            // Ensure ID is preserved as a number if possible
+            if (editingEmployee && editingEmployee.id) {
+                emp.id = editingEmployee.id;
+            } else {
+                emp.id = Date.now();
+            }
+            
+            // Ensure numeric fields are actually numbers
+            const numericFields = ['salary', 'wages', 'bonus', 'hra', 'ot', 'misc', 'days', 'hrs', 'pf', 'esic', 'gwlf', 'pt', 'advance', 'food', 'trn', 'rr', 'leave_amt', 'days_2', 'rate', 'rate_2', 'ph', 'pf_2', 'trn_2'];
+            numericFields.forEach(field => {
+                // Only convert if the field exists in the form submission or merged object
+                if(emp[field] !== undefined && emp[field] !== "") {
+                    emp[field] = Number(emp[field]);
+                }
+            });
+
+            // Call API which handles state update
+            api('save_employee', emp);
+            logActivity(editingEmployee ? 'Updated Employee' : 'Added Employee', emp.name);
+            setModalOpen(false);
+            setEditingEmployee(null); // Clear editing state
+            setFormData({}); // Clear form data
+        };
+
+        const openSigPad = (field) => {
+            setCurrentSigField(field);
+            setSigPadOpen(true);
+        };
+
+        const handleSigSave = (dataUrl) => {
+            setActiveSignatures(prev => ({...prev, [currentSigField]: dataUrl}));
+        };
+
+        const getSignatureImage = (field) => {
+            return activeSignatures[field] || defaultSigs[field];
+        };
+
+        if (loading) return <div className="h-screen flex items-center justify-center font-bold text-slate-400 animate-pulse">LOADING...</div>;
+        if (error) return <div className="h-screen flex items-center justify-center p-10 text-center"><p className="text-red-500 font-bold">{error}</p></div>;
+        if (!user) return <Login setUser={setUser} isDemo={isDemo} users={data.config?.users || []} />;
+
+        return (
+            <div className="min-h-screen flex flex-col md:flex-row overflow-hidden bg-slate-50">
+                <Sidebar user={user} tab={tab} setTab={setTab} setUser={setUser} />
+                <main className="flex-1 flex flex-col h-screen md:h-screen relative overflow-hidden">
+                    <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-10 pb-24 md:pb-10 scroll-smooth">
+                        {tab === 'dashboard' && <DashboardTab data={data} />}
+                        {tab === 'payroll' && <PayrollTab data={data} api={api} setModalOpen={setModalOpen} setEditingEmployee={setEditingEmployee} empDetailsFields={empDetailsFields} customFields={customFields} openSigPad={openSigPad} getSignatureImage={getSignatureImage} />}
+                        {tab === 'submissions' && <FormsTab data={data} api={api} logActivity={logActivity} companies={companies} appFormFields={appFormFields} customFields={customFields} openSigPad={openSigPad} activeSignatures={activeSignatures} setActiveSignatures={setActiveSignatures} defaultSigs={defaultSigs} getSignatureImage={getSignatureImage} />}
+                        {tab === 'history' && <HistoryTab data={data} api={api} empDetailsFields={empDetailsFields} customFields={customFields} openSigPad={openSigPad} getSignatureImage={getSignatureImage} />}
+                        {tab === 'settings' && <SettingsTab data={data} api={api} logActivity={logActivity} companies={companies} setCompanies={setCompanies} appFormFields={appFormFields} setAppFormFields={setAppFormFields} empDetailsFields={empDetailsFields} setEmpDetailsFields={setEmpDetailsFields} customFields={customFields} setCustomFields={setCustomFields} defaultSigs={defaultSigs} setDefaultSigs={setDefaultSigs} />}
+                    </div>
+                </main>
+                <MobileNav user={user} tab={tab} setTab={setTab} setUser={setUser} />
+
+                {sigPadOpen && <SignaturePad onSave={handleSigSave} onClose={() => setSigPadOpen(false)} />}
+
+                {modalOpen && (
+                    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-0 md:p-4 print-modal-fix">
+                        <div className="bg-white w-full max-w-5xl rounded-none md:rounded-2xl shadow-2xl h-full md:max-h-[95vh] flex flex-col animate-slide-up overflow-hidden print-modal-fix">
+                            
+                            {/* Modal Header */}
+                            <div className="p-4 md:p-6 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-10 shrink-0">
+                                <div>
+                                    <h3 className="text-xl md:text-2xl font-bold text-slate-800">{editingEmployee ? "Edit Employee" : "Add Employee"}</h3>
+                                    <p className="text-xs md:text-sm text-slate-500">Manage employee information and salary structure</p>
+                                </div>
+                                <button type="button" onClick={() => setModalOpen(false)} className="p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-600 transition-colors">
+                                    <Icon name="x" className="w-6 h-6"/>
+                                </button>
+                            </div>
+
+                            <form onSubmit={handleSaveEmployee} className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50">
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+                                    
+                                    {/* Column 1: Identity & Employment */}
+                                    <div className="space-y-6">
+                                        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                                            <h4 className="text-sm font-bold text-blue-600 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                                <span className="w-2 h-2 rounded-full bg-blue-500"></span> Identity & Work
+                                            </h4>
+                                            
+                                            <div className="space-y-4">
+                                                <div>
+                                                    <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Company / Site</label>
+                                                    <select name="company" value={formData?.company || ''} onChange={handleFormChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all">
+                                                        <option value="">Select Company</option>
+                                                        {companies.map((c,i) => <option key={i} value={c}>{c}</option>)}
+                                                    </select>
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Full Name</label>
+                                                    <input name="name" value={formData?.name || ''} onChange={handleFormChange} placeholder="e.g. John Doe" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" required />
+                                                </div>
+
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    {empDetailsFields.cardNo && (
+                                                        <div>
+                                                            <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Card No</label>
+                                                            <input name="cardNo" value={formData?.cardNo || ''} onChange={handleFormChange} placeholder="e.g. 1001" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none" />
+                                                        </div>
+                                                    )}
+                                                    {empDetailsFields.agt && (
+                                                        <div>
+                                                            <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">AGT</label>
+                                                            <input name="agt" value={formData?.agt || ''} onChange={handleFormChange} placeholder="Group" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none" />
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                {empDetailsFields.contactNo && (
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Contact Number</label>
+                                                        <input name="contactNo" value={formData?.contactNo || ''} onChange={handleFormChange} placeholder="+91 98765 43210" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                                            <h4 className="text-sm font-bold text-indigo-600 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                                <span className="w-2 h-2 rounded-full bg-indigo-500"></span> Official IDs
+                                            </h4>
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                {empDetailsFields.uan && (
+                                                    <div className="col-span-1">
+                                                        <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">UAN</label>
+                                                        <input name="uan" value={formData?.uan || ''} onChange={handleFormChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-indigo-500 outline-none" />
+                                                    </div>
+                                                )}
+                                                {empDetailsFields.esicNo && (
+                                                    <div className="col-span-1">
+                                                        <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">ESIC No</label>
+                                                        <input name="esicNo" value={formData?.esicNo || ''} onChange={handleFormChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-indigo-500 outline-none" />
+                                                    </div>
+                                                )}
+                                                {empDetailsFields.accountNumber && (
+                                                    <div className="col-span-1 sm:col-span-2">
+                                                        <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Bank Account</label>
+                                                        <input name="accountNumber" value={formData?.accountNumber || ''} onChange={handleFormChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-indigo-500 outline-none" />
+                                                    </div>
+                                                )}
+                                                {empDetailsFields.ifscCode && (
+                                                    <div className="col-span-1 sm:col-span-1">
+                                                        <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">IFSC</label>
+                                                        <input name="ifscCode" value={formData?.ifscCode || ''} onChange={handleFormChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-indigo-500 outline-none" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Custom Fields Section */}
+                                        {customFields.length > 0 && (
+                                            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                                                <h4 className="text-sm font-bold text-slate-600 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                                    <span className="w-2 h-2 rounded-full bg-slate-500"></span> Additional Info
+                                                </h4>
+                                                <div className="space-y-4">
+                                                    {customFields.map(field => (
+                                                        <div key={field.id}>
+                                                            <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">{field.label}</label>
+                                                            <input name={"custom_" + field.id} value={formData ? (formData["custom_" + field.id] || "") : ""} onChange={handleFormChange} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-slate-500 outline-none" />
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Column 2: Salary Structure */}
+                                    <div className="space-y-6">
+                                        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 h-full">
+                                            <h4 className="text-sm font-bold text-emerald-600 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                                <span className="w-2 h-2 rounded-full bg-emerald-500"></span> Salary & Wages
+                                            </h4>
+                                            
+                                            <div className="space-y-6">
+                                                <div>
+                                                    <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wide">Attendance</label>
+                                                    <div className="grid grid-cols-3 gap-3">
+                                                        <div>
+                                                            <label className="block text-[10px] font-bold text-slate-400 mb-1">DAYS</label>
+                                                            <input name="days" type="number" value={formData?.days || ''} onChange={handleFormChange} className="w-full p-2 bg-emerald-50/50 border border-emerald-100 rounded text-center font-bold text-emerald-700 focus:ring-1 focus:ring-emerald-500 outline-none" />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-[10px] font-bold text-slate-400 mb-1">HOURS</label>
+                                                            <input name="hrs" type="number" value={formData?.hrs || ''} onChange={handleFormChange} className="w-full p-2 bg-emerald-50/50 border border-emerald-100 rounded text-center font-bold text-emerald-700 focus:ring-1 focus:ring-emerald-500 outline-none" />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-[10px] font-bold text-slate-400 mb-1">PH</label>
+                                                            <input name="ph" type="number" value={formData?.ph || ''} onChange={handleFormChange} className="w-full p-2 bg-emerald-50/50 border border-emerald-100 rounded text-center font-bold text-emerald-700 focus:ring-1 focus:ring-emerald-500 outline-none" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                                                    <label className="block text-xs font-bold text-emerald-800 mb-3 uppercase">Primary Salary</label>
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <div>
+                                                            <label className="block text-[10px] font-bold text-emerald-600 mb-1">RATE</label>
+                                                            <input name="rate" type="number" value={formData?.rate || ''} onChange={handleFormChange} className="w-full p-2 bg-white border border-emerald-200 rounded font-bold text-slate-700 focus:border-emerald-500 outline-none" />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-[10px] font-bold text-emerald-600 mb-1">BASIC</label>
+                                                            <input name="salary" type="number" value={formData?.salary || ''} onChange={handleFormChange} className="w-full p-2 bg-white border border-emerald-200 rounded font-bold text-slate-700 focus:border-emerald-500 outline-none" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                                    <label className="block text-xs font-bold text-slate-500 mb-3 uppercase">Secondary / Wages</label>
+                                                    <div className="grid grid-cols-3 gap-3">
+                                                        <div>
+                                                            <label className="block text-[10px] font-bold text-slate-400 mb-1">DAYS 2</label>
+                                                            <input name="days_2" type="number" value={formData?.days_2 || ''} onChange={handleFormChange} className="w-full p-2 bg-white border border-slate-200 rounded text-center text-sm focus:border-slate-400 outline-none" />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-[10px] font-bold text-slate-400 mb-1">RATE 2</label>
+                                                            <input name="rate_2" type="number" value={formData?.rate_2 || ''} onChange={handleFormChange} className="w-full p-2 bg-white border border-slate-200 rounded text-center text-sm focus:border-slate-400 outline-none" />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-[10px] font-bold text-slate-400 mb-1">WAGES</label>
+                                                            <input name="wages" type="number" value={formData?.wages || ''} onChange={handleFormChange} className="w-full p-2 bg-white border border-slate-200 rounded text-center text-sm focus:border-slate-400 outline-none" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-xs font-bold text-amber-600 mb-2 uppercase tracking-wide">Allowances & OT</label>
+                                                    <div className="grid grid-cols-2 gap-3">
+                                                        {['bonus', 'hra', 'ot', 'misc'].map((f) => (
+                                                            <div key={f} className="relative">
+                                                                <label className="absolute -top-2 left-2 px-1 bg-white text-[10px] font-bold text-slate-400 uppercase">{f}</label>
+                                                                <input name={f} type="number" value={formData?.[f] || ''} onChange={handleFormChange} className="w-full p-3 bg-white border border-slate-200 rounded-lg text-sm font-semibold focus:border-amber-500 outline-none" />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Column 3: Deductions */}
+                                    <div className="space-y-6">
+                                        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 h-full flex flex-col">
+                                            <h4 className="text-sm font-bold text-red-600 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                                <span className="w-2 h-2 rounded-full bg-red-500"></span> Deductions
+                                            </h4>
+                                            
+                                            <div className="space-y-4 flex-1">
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div className="space-y-4">
+                                                        {['pf', 'esic', 'gwlf', 'pt', 'food'].map((f) => (
+                                                            <div key={f}>
+                                                                <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">{f}</label>
+                                                                <input name={f} type="number" value={formData?.[f] || ''} onChange={handleFormChange} className="w-full p-2 bg-red-50/30 border border-red-100 rounded text-sm font-medium text-slate-700 focus:border-red-400 outline-none" />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                    <div className="space-y-4">
+                                                        {['advance', 'trn', 'rr', 'leave_amt'].map((f) => (
+                                                            <div key={f}>
+                                                                <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">{f === 'leave_amt' ? 'Leave' : f}</label>
+                                                                <input name={f} type="number" value={formData?.[f] || ''} onChange={handleFormChange} className="w-full p-2 bg-red-50/30 border border-red-100 rounded text-sm font-medium text-slate-700 focus:border-red-400 outline-none" />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                <div className="pt-4 mt-4 border-t border-dashed border-slate-200">
+                                                    <label className="block text-xs font-bold text-slate-400 mb-2 uppercase">Secondary Deductions</label>
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <input name="pf_2" type="number" value={formData?.pf_2 || ''} onChange={handleFormChange} placeholder="PF 2" className="w-full p-2 bg-slate-50 border border-slate-200 rounded text-xs" />
+                                                        <input name="trn_2" type="number" value={formData?.trn_2 || ''} onChange={handleFormChange} placeholder="TRN 2" className="w-full p-2 bg-slate-50 border border-slate-200 rounded text-xs" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex justify-end gap-4 mt-8 pt-6 border-t border-slate-200 sticky bottom-0 bg-slate-50 safe-area-bottom">
+                                    <button type="button" onClick={() => setModalOpen(false)} className="px-6 py-3 rounded-xl font-bold text-slate-500 hover:bg-slate-200 hover:text-slate-700 transition-colors">Cancel</button>
+                                    <button type="submit" className="bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 px-8 py-3 text-sm shadow-lg shadow-blue-500/30 transition-all transform hover:scale-[1.02]">{editingEmployee ? "Update Employee" : "Save New Employee"}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+[16-Jan-2026 13:48:01 UTC] save_employee error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'company' in 'SET'
+[16-Jan-2026 14:00:00 UTC] save_employee: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'company' in 'SET'
+[16-Jan-2026 14:09:04 UTC] save_employee: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'company' in 'SET'
+[16-Jan-2026 14:12:18 UTC] save_employee: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'company' in 'INSERT INTO'
+[16-Jan-2026 14:37:59 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 14:38:02 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 14:38:16 UTC] API Request: action=save_employee, method=POST
+[16-Jan-2026 14:38:16 UTC] save_employee raw input: {"id":1768574294398,"name":"John Doe","cardNo":"1001","salary":15000,"wages":0,"bonus":0,"hra":0,"ot":0,"misc":0,"days":26,"hrs":208,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"food":0,"trn":0,"
+[16-Jan-2026 14:38:16 UTC] save_employee data: {"id":1768574294398,"name":"John Doe","cardNo":"1001","salary":15000,"wages":0,"bonus":0,"hra":0,"ot":0,"misc":0,"days":26,"hrs":208,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"food":0,"trn":0,"rr":0,"leave_amt":0,"uan":"123456789012","esicNo":"1234567890","agt":"Group A","ifscCode":"SBIN0001234","accountNumber":"1234567890","company":"Soni Metal Pvt Ltd"}
+[16-Jan-2026 14:38:16 UTC] INSERT SQL: INSERT INTO employees (id, `name`, `cardNo`, `company`, `salary`, `wages`, `bonus`, `hra`, `ot`, `misc`, `days`, `hrs`, `pf`, `esic`, `gwlf`, `pt`, `advance`, `food`, `trn`, `rr`, `leave_amt`, `uan`, `esicNo`, `agt`, `accountNumber`, `ifscCode`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[16-Jan-2026 14:38:16 UTC] INSERT VALUES: [1768574294398,"John Doe","1001","Soni Metal Pvt Ltd",15000,0,0,0,0,0,26,208,1800,100,0,0,0,0,0,0,0,"123456789012","1234567890","Group A","1234567890","SBIN0001234"]
+[16-Jan-2026 14:38:53 UTC] API Request: action=save_employee, method=POST
+[16-Jan-2026 14:38:53 UTC] save_employee raw input: {"id":1768574330823,"name":"John Doe","cardNo":"1001","salary":15000,"wages":0,"bonus":0,"hra":0,"ot":0,"misc":0,"days":26,"hrs":208,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"food":0,"trn":0,"
+[16-Jan-2026 14:38:53 UTC] save_employee data: {"id":1768574330823,"name":"John Doe","cardNo":"1001","salary":15000,"wages":0,"bonus":0,"hra":0,"ot":0,"misc":0,"days":26,"hrs":208,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"food":0,"trn":0,"rr":0,"leave_amt":0,"uan":"123456789012","esicNo":"1234567890","agt":"Group A","ifscCode":"SBIN0001234","accountNumber":"1234567890","company":"Soni Metal Pvt Ltd"}
+[16-Jan-2026 14:38:53 UTC] INSERT SQL: INSERT INTO employees (id, `name`, `cardNo`, `company`, `salary`, `wages`, `bonus`, `hra`, `ot`, `misc`, `days`, `hrs`, `pf`, `esic`, `gwlf`, `pt`, `advance`, `food`, `trn`, `rr`, `leave_amt`, `uan`, `esicNo`, `agt`, `accountNumber`, `ifscCode`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[16-Jan-2026 14:38:53 UTC] INSERT VALUES: [1768574330823,"John Doe","1001","Soni Metal Pvt Ltd",15000,0,0,0,0,0,26,208,1800,100,0,0,0,0,0,0,0,"123456789012","1234567890","Group A","1234567890","SBIN0001234"]
+[16-Jan-2026 14:43:06 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 14:43:14 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 14:43:35 UTC] API Request: action=delete_employee, method=GET
+[16-Jan-2026 14:43:35 UTC] Deleting employee ID: 1768573859858
+[16-Jan-2026 14:43:36 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 14:43:55 UTC] API Request: action=save_employee, method=POST
+[16-Jan-2026 14:43:55 UTC] save_employee raw input: {"id":1768574633653,"name":"John Doe","cardNo":"1001","salary":15000,"wages":0,"bonus":0,"hra":0,"ot":0,"misc":0,"days":26,"hrs":208,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"food":0,"trn":0,"
+[16-Jan-2026 14:43:55 UTC] save_employee data: {"id":1768574633653,"name":"John Doe","cardNo":"1001","salary":15000,"wages":0,"bonus":0,"hra":0,"ot":0,"misc":0,"days":26,"hrs":208,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"food":0,"trn":0,"rr":0,"leave_amt":0,"uan":"123456789012","esicNo":"1234567890","agt":"Group A","ifscCode":"SBIN0001234","accountNumber":"1234567890","company":"Soni Metal Pvt Ltd"}
+[16-Jan-2026 14:43:55 UTC] INSERT SQL: INSERT INTO employees (id, `name`, `cardNo`, `company`, `salary`, `wages`, `bonus`, `hra`, `ot`, `misc`, `days`, `hrs`, `pf`, `esic`, `gwlf`, `pt`, `advance`, `food`, `trn`, `rr`, `leave_amt`, `uan`, `esicNo`, `agt`, `accountNumber`, `ifscCode`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[16-Jan-2026 14:43:55 UTC] INSERT VALUES: [1768574633653,"John Doe","1001","Soni Metal Pvt Ltd",15000,0,0,0,0,0,26,208,1800,100,0,0,0,0,0,0,0,"123456789012","1234567890","Group A","1234567890","SBIN0001234"]
+[16-Jan-2026 14:44:12 UTC] API Request: action=save_employee, method=POST
+[16-Jan-2026 14:44:12 UTC] save_employee raw input: {"id":1768574113074,"cardNo":"1001","company":"INTERIOR AND MORE LTD","contactNo":null,"uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":15000,"
+[16-Jan-2026 14:44:12 UTC] save_employee data: {"id":1768574113074,"cardNo":"1001","company":"INTERIOR AND MORE LTD","contactNo":null,"uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":15000,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"trn":0,"rr":0,"food":0,"accountNumber":"1234567890","ifscCode":"SBIN0001234","agt":"Group A","wages":0,"created_at":"2026-01-16 14:35:34","days_2":0,"rate_2":0,"pf_2":0,"trn_2":0,"bonus":0,"hra":0,"ot":0,"misc":0,"leave_amt":0}
+[16-Jan-2026 14:44:12 UTC] UPDATE SQL: UPDATE employees SET `name` = ?, `cardNo` = ?, `company` = ?, `contactNo` = ?, `salary` = ?, `wages` = ?, `bonus` = ?, `hra` = ?, `ot` = ?, `misc` = ?, `days` = ?, `hrs` = ?, `ph` = ?, `rate` = ?, `rate_2` = ?, `days_2` = ?, `pf` = ?, `esic` = ?, `gwlf` = ?, `pt` = ?, `advance` = ?, `food` = ?, `trn` = ?, `rr` = ?, `leave_amt` = ?, `pf_2` = ?, `trn_2` = ?, `uan` = ?, `esicNo` = ?, `agt` = ?, `accountNumber` = ?, `ifscCode` = ? WHERE id = ?
+[16-Jan-2026 14:44:12 UTC] UPDATE VALUES: ["John Doe","1001","INTERIOR AND MORE LTD","",15000,0,0,0,0,0,26,208,0,0,0,0,1800,100,0,0,0,0,0,0,0,0,0,"123456789012","1234567890","Group A","1234567890","SBIN0001234",1768574113074]
+[16-Jan-2026 14:44:37 UTC] API Request: action=save_employee, method=POST
+[16-Jan-2026 14:44:37 UTC] save_employee raw input: {"id":1768574674784,"name":"John Doe","cardNo":"1001","salary":15000,"wages":0,"bonus":0,"hra":0,"ot":0,"misc":0,"days":26,"hrs":208,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"food":0,"trn":0,"
+[16-Jan-2026 14:44:37 UTC] save_employee data: {"id":1768574674784,"name":"John Doe","cardNo":"1001","salary":15000,"wages":0,"bonus":0,"hra":0,"ot":0,"misc":0,"days":26,"hrs":208,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"food":0,"trn":0,"rr":0,"leave_amt":0,"uan":"123456789012","esicNo":"1234567890","agt":"Group A","ifscCode":"SBIN0001234","accountNumber":"1234567890","company":"Soni Metal Pvt Ltd"}
+[16-Jan-2026 14:44:37 UTC] INSERT SQL: INSERT INTO employees (id, `name`, `cardNo`, `company`, `salary`, `wages`, `bonus`, `hra`, `ot`, `misc`, `days`, `hrs`, `pf`, `esic`, `gwlf`, `pt`, `advance`, `food`, `trn`, `rr`, `leave_amt`, `uan`, `esicNo`, `agt`, `accountNumber`, `ifscCode`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[16-Jan-2026 14:44:37 UTC] INSERT VALUES: [1768574674784,"John Doe","1001","Soni Metal Pvt Ltd",15000,0,0,0,0,0,26,208,1800,100,0,0,0,0,0,0,0,"123456789012","1234567890","Group A","1234567890","SBIN0001234"]
+[16-Jan-2026 14:44:51 UTC] API Request: action=save_submission, method=POST
+[16-Jan-2026 14:44:51 UTC] save_submission input: {"companyName":"Parishram","date":"1/16/2026","data":{"name":"addad","company":"COPTEC PRIVATE LIMITED","signatures":{"hr":null,"contractor":null,"employee":null}}}
+[16-Jan-2026 14:44:51 UTC] Saving submission: company=Parishram, date=1/16/2026
+[16-Jan-2026 14:44:52 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 14:45:47 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 14:46:11 UTC] API Request: action=save_employee, method=POST
+[16-Jan-2026 14:46:11 UTC] save_employee raw input: {"id":1768574769694,"name":"John Doe","cardNo":"1001","salary":15000,"wages":0,"bonus":0,"hra":0,"ot":0,"misc":0,"days":26,"hrs":208,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"food":0,"trn":0,"
+[16-Jan-2026 14:46:11 UTC] save_employee data: {"id":1768574769694,"name":"John Doe","cardNo":"1001","salary":15000,"wages":0,"bonus":0,"hra":0,"ot":0,"misc":0,"days":26,"hrs":208,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"food":0,"trn":0,"rr":0,"leave_amt":0,"uan":"123456789012","esicNo":"1234567890","agt":"Group A","ifscCode":"SBIN0001234","accountNumber":"1234567890","company":"Soni Metal Pvt Ltd"}
+[16-Jan-2026 14:46:11 UTC] INSERT SQL: INSERT INTO employees (id, `name`, `cardNo`, `company`, `salary`, `wages`, `bonus`, `hra`, `ot`, `misc`, `days`, `hrs`, `pf`, `esic`, `gwlf`, `pt`, `advance`, `food`, `trn`, `rr`, `leave_amt`, `uan`, `esicNo`, `agt`, `accountNumber`, `ifscCode`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[16-Jan-2026 14:46:11 UTC] INSERT VALUES: [1768574769694,"John Doe","1001","Soni Metal Pvt Ltd",15000,0,0,0,0,0,26,208,1800,100,0,0,0,0,0,0,0,"123456789012","1234567890","Group A","1234567890","SBIN0001234"]
+[16-Jan-2026 14:47:03 UTC] API Request: action=save_submission, method=POST
+[16-Jan-2026 14:47:03 UTC] save_submission input: {"companyName":"Parishram","date":"1/16/2026","data":{"name":"kishan","company":"LED X","signatures":{"hr":null,"contractor":null,"employee":null}}}
+[16-Jan-2026 14:47:03 UTC] Saving submission: company=Parishram, date=1/16/2026
+[16-Jan-2026 14:47:04 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 14:47:13 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 14:53:49 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 14:58:55 UTC] API Request: action=save_submission, method=POST
+[16-Jan-2026 14:58:55 UTC] save_submission input: {"companyName":"Parishram","date":"16/1/2026","data":{"company":"MRIDA GREEN & DEVELOPMENT PVT LTD","aadharcard":{"name":"40deb4e1-68e0-4f70-9db2-6834dfa20ba2.jpeg","data":"data:image/jpeg;base64,/9j/
+[16-Jan-2026 14:58:55 UTC] Saving submission: company=Parishram, date=16/1/2026
+[16-Jan-2026 14:58:56 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 14:59:46 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 15:36:28 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 15:38:38 UTC] API Request: action=save_submission, method=POST
+[16-Jan-2026 15:38:38 UTC] save_submission input: {"companyName":"Parishram","date":"1/16/2026","data":{"name":"ookp","company":"COPTEC PRIVATE LIMITED","signatures":{"hr":null,"contractor":null,"employee":null}}}
+[16-Jan-2026 15:38:38 UTC] Saving submission: company=Parishram, date=1/16/2026
+[16-Jan-2026 15:38:39 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 15:38:49 UTC] API Request: action=save_submission, method=POST
+[16-Jan-2026 15:38:49 UTC] save_submission input: {"companyName":"Parishram","date":"1/16/2026","data":{"name":"SAURABH PANDEY","contactNo":"06359322504","presentAddress":"UMBERAGON GUJRAT TAKESHILA SOCTY C -WING 404","permanentAddress":"Takshashila 
+[16-Jan-2026 15:38:49 UTC] Saving submission: company=Parishram, date=1/16/2026
+[16-Jan-2026 15:38:50 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 15:38:58 UTC] API Request: action=delete_submission, method=GET
+[16-Jan-2026 15:38:58 UTC] Deleting submission ID: 41
+[16-Jan-2026 15:38:59 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 15:39:08 UTC] API Request: action=delete_submission, method=GET
+[16-Jan-2026 15:39:08 UTC] Deleting submission ID: 40
+[16-Jan-2026 15:39:09 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 15:39:14 UTC] API Request: action=delete_submission, method=GET
+[16-Jan-2026 15:39:14 UTC] Deleting submission ID: 39
+[16-Jan-2026 15:39:15 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 15:39:18 UTC] API Request: action=delete_submission, method=GET
+[16-Jan-2026 15:39:18 UTC] Deleting submission ID: 38
+[16-Jan-2026 15:39:19 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 15:39:22 UTC] API Request: action=delete_submission, method=GET
+[16-Jan-2026 15:39:22 UTC] Deleting submission ID: 37
+[16-Jan-2026 15:39:23 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 15:39:29 UTC] API Request: action=delete_submission, method=GET
+[16-Jan-2026 15:39:29 UTC] Deleting submission ID: 36
+[16-Jan-2026 15:39:30 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 15:50:05 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 15:58:19 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 15:58:34 UTC] API Request: action=save_batch, method=POST
+[16-Jan-2026 15:58:34 UTC] save_batch input: {"name":"jan","date":"1/16/2026","data":[{"id":1768574769694,"cardNo":"1001","company":"Soni Metal Pvt Ltd","contactNo":null,"uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs
+[16-Jan-2026 15:58:34 UTC] Saving batch: name=jan, date=1/16/2026, data_size=5136
+[16-Jan-2026 15:58:35 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 15:58:50 UTC] API Request: action=save_employee, method=POST
+[16-Jan-2026 15:58:50 UTC] save_employee raw input: {"id":1768574769694,"cardNo":"1001","company":"Soni Metal Pvt Ltd","contactNo":null,"uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":335000,"pf
+[16-Jan-2026 15:58:50 UTC] save_employee data: {"id":1768574769694,"cardNo":"1001","company":"Soni Metal Pvt Ltd","contactNo":null,"uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":335000,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"trn":0,"rr":0,"food":0,"accountNumber":"1234567890","ifscCode":"SBIN0001234","agt":"Group A","wages":0,"created_at":"2026-01-16 14:46:11","days_2":0,"rate_2":0,"pf_2":0,"trn_2":0,"bonus":0,"hra":0,"ot":0,"misc":0,"leave_amt":0}
+[16-Jan-2026 15:58:50 UTC] UPDATE SQL: UPDATE employees SET `name` = ?, `cardNo` = ?, `company` = ?, `contactNo` = ?, `salary` = ?, `wages` = ?, `bonus` = ?, `hra` = ?, `ot` = ?, `misc` = ?, `days` = ?, `hrs` = ?, `ph` = ?, `rate` = ?, `rate_2` = ?, `days_2` = ?, `pf` = ?, `esic` = ?, `gwlf` = ?, `pt` = ?, `advance` = ?, `food` = ?, `trn` = ?, `rr` = ?, `leave_amt` = ?, `pf_2` = ?, `trn_2` = ?, `uan` = ?, `esicNo` = ?, `agt` = ?, `accountNumber` = ?, `ifscCode` = ? WHERE id = ?
+[16-Jan-2026 15:58:50 UTC] UPDATE VALUES: ["John Doe","1001","Soni Metal Pvt Ltd","",335000,0,0,0,0,0,26,208,0,0,0,0,1800,100,0,0,0,0,0,0,0,0,0,"123456789012","1234567890","Group A","1234567890","SBIN0001234",1768574769694]
+[16-Jan-2026 15:58:57 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:00:02 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:00:36 UTC] API Request: action=save_employee, method=POST
+[16-Jan-2026 16:00:36 UTC] save_employee raw input: {"id":1768574769694,"cardNo":"1001","company":"Soni Metal Pvt Ltd","contactNo":"","uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":878686835000
+[16-Jan-2026 16:00:36 UTC] save_employee data: {"id":1768574769694,"cardNo":"1001","company":"Soni Metal Pvt Ltd","contactNo":"","uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":878686835000,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"trn":0,"rr":0,"food":0,"accountNumber":"1234567890","ifscCode":"SBIN0001234","agt":"Group A","wages":0,"created_at":"2026-01-16 14:46:11","days_2":0,"rate_2":0,"pf_2":0,"trn_2":0,"bonus":0,"hra":0,"ot":0,"misc":0,"leave_amt":0}
+[16-Jan-2026 16:00:36 UTC] UPDATE SQL: UPDATE employees SET `name` = ?, `cardNo` = ?, `company` = ?, `contactNo` = ?, `salary` = ?, `wages` = ?, `bonus` = ?, `hra` = ?, `ot` = ?, `misc` = ?, `days` = ?, `hrs` = ?, `ph` = ?, `rate` = ?, `rate_2` = ?, `days_2` = ?, `pf` = ?, `esic` = ?, `gwlf` = ?, `pt` = ?, `advance` = ?, `food` = ?, `trn` = ?, `rr` = ?, `leave_amt` = ?, `pf_2` = ?, `trn_2` = ?, `uan` = ?, `esicNo` = ?, `agt` = ?, `accountNumber` = ?, `ifscCode` = ? WHERE id = ?
+[16-Jan-2026 16:00:36 UTC] UPDATE VALUES: ["John Doe","1001","Soni Metal Pvt Ltd","",878686835000,0,0,0,0,0,26,208,0,0,0,0,1800,100,0,0,0,0,0,0,0,0,0,"123456789012","1234567890","Group A","1234567890","SBIN0001234",1768574769694]
+[16-Jan-2026 16:00:41 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:01:15 UTC] API Request: action=delete_employee, method=GET
+[16-Jan-2026 16:01:15 UTC] Deleting employee ID: 1768574769694
+[16-Jan-2026 16:01:16 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:01:20 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:01:42 UTC] API Request: action=save_employee, method=POST
+[16-Jan-2026 16:01:42 UTC] save_employee raw input: {"id":1768579301409,"name":"PE001","cardNo":"Saurabh Sharma","salary":null,"wages":28000,"bonus":0,"hra":2000,"ot":30000,"misc":0,"days":30000,"hrs":208,"pf":0,"esic":0,"gwlf":0,"pt":0,"advance":0,"fo
+[16-Jan-2026 16:01:42 UTC] save_employee data: {"id":1768579301409,"name":"PE001","cardNo":"Saurabh Sharma","salary":null,"wages":28000,"bonus":0,"hra":2000,"ot":30000,"misc":0,"days":30000,"hrs":208,"pf":0,"esic":0,"gwlf":0,"pt":0,"advance":0,"food":0,"trn":0,"rr":0,"leave_amt":0,"uan":"","esicNo":"","agt":"","ifscCode":"","accountNumber":"","company":""}
+[16-Jan-2026 16:01:42 UTC] INSERT SQL: INSERT INTO employees (id, `name`, `cardNo`, `company`, `salary`, `wages`, `bonus`, `hra`, `ot`, `misc`, `days`, `hrs`, `pf`, `esic`, `gwlf`, `pt`, `advance`, `food`, `trn`, `rr`, `leave_amt`, `uan`, `esicNo`, `agt`, `accountNumber`, `ifscCode`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[16-Jan-2026 16:01:42 UTC] INSERT VALUES: [1768579301409,"PE001","Saurabh Sharma","","",28000,0,2000,30000,0,30000,208,0,0,0,0,0,0,0,0,0,"","","","",""]
+[16-Jan-2026 16:01:43 UTC] API Request: action=save_employee, method=POST
+[16-Jan-2026 16:01:43 UTC] save_employee raw input: {"id":1768579302468,"name":"PE002","cardNo":"Rahul Verma","salary":null,"wages":22000,"bonus":0,"hra":0,"ot":22000,"misc":1800,"days":20200,"hrs":208,"pf":0,"esic":0,"gwlf":0,"pt":0,"advance":0,"food"
+[16-Jan-2026 16:01:43 UTC] save_employee data: {"id":1768579302468,"name":"PE002","cardNo":"Rahul Verma","salary":null,"wages":22000,"bonus":0,"hra":0,"ot":22000,"misc":1800,"days":20200,"hrs":208,"pf":0,"esic":0,"gwlf":0,"pt":0,"advance":0,"food":0,"trn":0,"rr":0,"leave_amt":0,"uan":"","esicNo":"","agt":"","ifscCode":"","accountNumber":"","company":""}
+[16-Jan-2026 16:01:43 UTC] INSERT SQL: INSERT INTO employees (id, `name`, `cardNo`, `company`, `salary`, `wages`, `bonus`, `hra`, `ot`, `misc`, `days`, `hrs`, `pf`, `esic`, `gwlf`, `pt`, `advance`, `food`, `trn`, `rr`, `leave_amt`, `uan`, `esicNo`, `agt`, `accountNumber`, `ifscCode`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[16-Jan-2026 16:01:43 UTC] INSERT VALUES: [1768579302468,"PE002","Rahul Verma","","",22000,0,0,22000,1800,20200,208,0,0,0,0,0,0,0,0,0,"","","","",""]
+[16-Jan-2026 16:03:31 UTC] API Request: action=update_config, method=POST
+[16-Jan-2026 16:03:31 UTC] update_config input: {"appSettings":{"companyName":"Parishram Enterprises","appName":"Payroll Manager","version":"1.0"},"users":[{"username":"Raja","password":"Raja#184","role":"Super Admin","permissions":{"dashboard":tru
+[16-Jan-2026 16:03:32 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:03:45 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:05:00 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:25:13 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:26:14 UTC] API Request: action=save_employee, method=POST
+[16-Jan-2026 16:26:14 UTC] save_employee raw input: {"id":1768574113074,"cardNo":"1001","company":"INTERIOR AND MORE LTD","contactNo":"","uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":292739723
+[16-Jan-2026 16:26:14 UTC] save_employee data: {"id":1768574113074,"cardNo":"1001","company":"INTERIOR AND MORE LTD","contactNo":"","uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":29273972397,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"trn":0,"rr":0,"food":0,"accountNumber":"1234567890","ifscCode":"SBIN0001234","agt":"Group A","wages":0,"created_at":"2026-01-16 14:35:34","days_2":0,"rate_2":0,"pf_2":0,"trn_2":0,"bonus":0,"hra":0,"ot":0,"misc":0,"leave_amt":0}
+[16-Jan-2026 16:26:14 UTC] UPDATE SQL: UPDATE employees SET `name` = ?, `cardNo` = ?, `company` = ?, `contactNo` = ?, `salary` = ?, `wages` = ?, `bonus` = ?, `hra` = ?, `ot` = ?, `misc` = ?, `days` = ?, `hrs` = ?, `ph` = ?, `rate` = ?, `rate_2` = ?, `days_2` = ?, `pf` = ?, `esic` = ?, `gwlf` = ?, `pt` = ?, `advance` = ?, `food` = ?, `trn` = ?, `rr` = ?, `leave_amt` = ?, `pf_2` = ?, `trn_2` = ?, `uan` = ?, `esicNo` = ?, `agt` = ?, `accountNumber` = ?, `ifscCode` = ? WHERE id = ?
+[16-Jan-2026 16:26:14 UTC] UPDATE VALUES: ["John Doe","1001","INTERIOR AND MORE LTD","",29273972397,0,0,0,0,0,26,208,0,0,0,0,1800,100,0,0,0,0,0,0,0,0,0,"123456789012","1234567890","Group A","1234567890","SBIN0001234",1768574113074]
+[16-Jan-2026 16:26:27 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:26:57 UTC] API Request: action=save_employee, method=POST
+[16-Jan-2026 16:26:57 UTC] save_employee raw input: {"id":1768574113074,"cardNo":"1001","company":"INTERIOR AND MORE LTD","contactNo":"","uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":20000,"pf
+[16-Jan-2026 16:26:57 UTC] save_employee data: {"id":1768574113074,"cardNo":"1001","company":"INTERIOR AND MORE LTD","contactNo":"","uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":20000,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"trn":0,"rr":0,"food":0,"accountNumber":"1234567890","ifscCode":"SBIN0001234","agt":"Group A","wages":0,"created_at":"2026-01-16 14:35:34","days_2":0,"rate_2":0,"pf_2":0,"trn_2":0,"bonus":0,"hra":0,"ot":0,"misc":0,"leave_amt":0}
+[16-Jan-2026 16:26:57 UTC] UPDATE SQL: UPDATE employees SET `name` = ?, `cardNo` = ?, `company` = ?, `contactNo` = ?, `salary` = ?, `wages` = ?, `bonus` = ?, `hra` = ?, `ot` = ?, `misc` = ?, `days` = ?, `hrs` = ?, `ph` = ?, `rate` = ?, `rate_2` = ?, `days_2` = ?, `pf` = ?, `esic` = ?, `gwlf` = ?, `pt` = ?, `advance` = ?, `food` = ?, `trn` = ?, `rr` = ?, `leave_amt` = ?, `pf_2` = ?, `trn_2` = ?, `uan` = ?, `esicNo` = ?, `agt` = ?, `accountNumber` = ?, `ifscCode` = ? WHERE id = ?
+[16-Jan-2026 16:26:57 UTC] UPDATE VALUES: ["John Doe","1001","INTERIOR AND MORE LTD","",20000,0,0,0,0,0,26,208,0,0,0,0,1800,100,0,0,0,0,0,0,0,0,0,"123456789012","1234567890","Group A","1234567890","SBIN0001234",1768574113074]
+[16-Jan-2026 16:27:04 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:27:31 UTC] API Request: action=save_employee, method=POST
+[16-Jan-2026 16:27:31 UTC] save_employee raw input: {"id":1768573321301,"cardNo":"1001","company":null,"contactNo":null,"uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":37492,"pf":1800,"esic":100
+[16-Jan-2026 16:27:31 UTC] save_employee data: {"id":1768573321301,"cardNo":"1001","company":null,"contactNo":null,"uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":37492,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"trn":0,"rr":0,"food":0,"accountNumber":"1234567890","ifscCode":"SBIN0001234","agt":"Group A","wages":0,"created_at":"2026-01-16 14:22:03","days_2":0,"rate_2":0,"pf_2":0,"trn_2":0,"bonus":0,"hra":0,"ot":0,"misc":0,"leave_amt":0}
+[16-Jan-2026 16:27:31 UTC] UPDATE SQL: UPDATE employees SET `name` = ?, `cardNo` = ?, `company` = ?, `contactNo` = ?, `salary` = ?, `wages` = ?, `bonus` = ?, `hra` = ?, `ot` = ?, `misc` = ?, `days` = ?, `hrs` = ?, `ph` = ?, `rate` = ?, `rate_2` = ?, `days_2` = ?, `pf` = ?, `esic` = ?, `gwlf` = ?, `pt` = ?, `advance` = ?, `food` = ?, `trn` = ?, `rr` = ?, `leave_amt` = ?, `pf_2` = ?, `trn_2` = ?, `uan` = ?, `esicNo` = ?, `agt` = ?, `accountNumber` = ?, `ifscCode` = ? WHERE id = ?
+[16-Jan-2026 16:27:31 UTC] UPDATE VALUES: ["John Doe","1001","","",37492,0,0,0,0,0,26,208,0,0,0,0,1800,100,0,0,0,0,0,0,0,0,0,"123456789012","1234567890","Group A","1234567890","SBIN0001234",1768573321301]
+[16-Jan-2026 16:27:39 UTC] API Request: action=save_employee, method=POST
+[16-Jan-2026 16:27:39 UTC] save_employee raw input: {"id":1768574674784,"cardNo":"1001","company":"Soni Metal Pvt Ltd","contactNo":null,"uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":92993,"pf"
+[16-Jan-2026 16:27:39 UTC] save_employee data: {"id":1768574674784,"cardNo":"1001","company":"Soni Metal Pvt Ltd","contactNo":null,"uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":92993,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"trn":0,"rr":0,"food":0,"accountNumber":"1234567890","ifscCode":"SBIN0001234","agt":"Group A","wages":0,"created_at":"2026-01-16 14:44:37","days_2":0,"rate_2":0,"pf_2":0,"trn_2":0,"bonus":0,"hra":0,"ot":0,"misc":0,"leave_amt":0}
+[16-Jan-2026 16:27:39 UTC] UPDATE SQL: UPDATE employees SET `name` = ?, `cardNo` = ?, `company` = ?, `contactNo` = ?, `salary` = ?, `wages` = ?, `bonus` = ?, `hra` = ?, `ot` = ?, `misc` = ?, `days` = ?, `hrs` = ?, `ph` = ?, `rate` = ?, `rate_2` = ?, `days_2` = ?, `pf` = ?, `esic` = ?, `gwlf` = ?, `pt` = ?, `advance` = ?, `food` = ?, `trn` = ?, `rr` = ?, `leave_amt` = ?, `pf_2` = ?, `trn_2` = ?, `uan` = ?, `esicNo` = ?, `agt` = ?, `accountNumber` = ?, `ifscCode` = ? WHERE id = ?
+[16-Jan-2026 16:27:39 UTC] UPDATE VALUES: ["John Doe","1001","Soni Metal Pvt Ltd","",92993,0,0,0,0,0,26,208,0,0,0,0,1800,100,0,0,0,0,0,0,0,0,0,"123456789012","1234567890","Group A","1234567890","SBIN0001234",1768574674784]
+[16-Jan-2026 16:27:51 UTC] API Request: action=save_employee, method=POST
+[16-Jan-2026 16:27:51 UTC] save_employee raw input: {"id":1768574294398,"cardNo":"1001","company":"Soni Metal Pvt Ltd","contactNo":null,"uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":66623,"pf"
+[16-Jan-2026 16:27:51 UTC] save_employee data: {"id":1768574294398,"cardNo":"1001","company":"Soni Metal Pvt Ltd","contactNo":null,"uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":66623,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"trn":0,"rr":0,"food":0,"accountNumber":"1234567890","ifscCode":"SBIN0001234","agt":"Group A","wages":0,"created_at":"2026-01-16 14:38:16","days_2":0,"rate_2":0,"pf_2":0,"trn_2":0,"bonus":0,"hra":0,"ot":0,"misc":0,"leave_amt":0}
+[16-Jan-2026 16:27:51 UTC] UPDATE SQL: UPDATE employees SET `name` = ?, `cardNo` = ?, `company` = ?, `contactNo` = ?, `salary` = ?, `wages` = ?, `bonus` = ?, `hra` = ?, `ot` = ?, `misc` = ?, `days` = ?, `hrs` = ?, `ph` = ?, `rate` = ?, `rate_2` = ?, `days_2` = ?, `pf` = ?, `esic` = ?, `gwlf` = ?, `pt` = ?, `advance` = ?, `food` = ?, `trn` = ?, `rr` = ?, `leave_amt` = ?, `pf_2` = ?, `trn_2` = ?, `uan` = ?, `esicNo` = ?, `agt` = ?, `accountNumber` = ?, `ifscCode` = ? WHERE id = ?
+[16-Jan-2026 16:27:51 UTC] UPDATE VALUES: ["John Doe","1001","Soni Metal Pvt Ltd","",66623,0,0,0,0,0,26,208,0,0,0,0,1800,100,0,0,0,0,0,0,0,0,0,"123456789012","1234567890","Group A","1234567890","SBIN0001234",1768574294398]
+[16-Jan-2026 16:27:56 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:29:25 UTC] API Request: action=save_employee, method=POST
+[16-Jan-2026 16:29:25 UTC] save_employee raw input: {"id":1768573321301,"cardNo":"1001","company":"AVION EXIM PVT LTD","contactNo":"","uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":37492,"pf":1
+[16-Jan-2026 16:29:25 UTC] save_employee data: {"id":1768573321301,"cardNo":"1001","company":"AVION EXIM PVT LTD","contactNo":"","uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":37492,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"trn":0,"rr":0,"food":0,"accountNumber":"1234567890","ifscCode":"SBIN0001234","agt":"Group A","wages":0,"created_at":"2026-01-16 14:22:03","days_2":0,"rate_2":0,"pf_2":0,"trn_2":0,"bonus":0,"hra":0,"ot":0,"misc":0,"leave_amt":0}
+[16-Jan-2026 16:29:25 UTC] UPDATE SQL: UPDATE employees SET `name` = ?, `cardNo` = ?, `company` = ?, `contactNo` = ?, `salary` = ?, `wages` = ?, `bonus` = ?, `hra` = ?, `ot` = ?, `misc` = ?, `days` = ?, `hrs` = ?, `ph` = ?, `rate` = ?, `rate_2` = ?, `days_2` = ?, `pf` = ?, `esic` = ?, `gwlf` = ?, `pt` = ?, `advance` = ?, `food` = ?, `trn` = ?, `rr` = ?, `leave_amt` = ?, `pf_2` = ?, `trn_2` = ?, `uan` = ?, `esicNo` = ?, `agt` = ?, `accountNumber` = ?, `ifscCode` = ? WHERE id = ?
+[16-Jan-2026 16:29:25 UTC] UPDATE VALUES: ["John Doe","1001","AVION EXIM PVT LTD","",37492,0,0,0,0,0,26,208,0,0,0,0,1800,100,0,0,0,0,0,0,0,0,0,"123456789012","1234567890","Group A","1234567890","SBIN0001234",1768573321301]
+[16-Jan-2026 16:29:31 UTC] API Request: action=save_employee, method=POST
+[16-Jan-2026 16:29:31 UTC] save_employee raw input: {"id":1768569368456,"cardNo":"1001","company":"ALKON PLASTIC PVT LTD","contactNo":null,"uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":15000,"
+[16-Jan-2026 16:29:31 UTC] save_employee data: {"id":1768569368456,"cardNo":"1001","company":"ALKON PLASTIC PVT LTD","contactNo":null,"uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hrs":208,"ph":0,"rate":0,"salary":15000,"pf":1800,"esic":100,"gwlf":0,"pt":0,"advance":0,"trn":0,"rr":0,"food":0,"accountNumber":"1234567890","ifscCode":"SBIN0001234","agt":"Group A","wages":0,"created_at":"2026-01-16 13:16:10","days_2":0,"rate_2":0,"pf_2":0,"trn_2":0,"bonus":0,"hra":0,"ot":0,"misc":0,"leave_amt":0}
+[16-Jan-2026 16:29:31 UTC] UPDATE SQL: UPDATE employees SET `name` = ?, `cardNo` = ?, `company` = ?, `contactNo` = ?, `salary` = ?, `wages` = ?, `bonus` = ?, `hra` = ?, `ot` = ?, `misc` = ?, `days` = ?, `hrs` = ?, `ph` = ?, `rate` = ?, `rate_2` = ?, `days_2` = ?, `pf` = ?, `esic` = ?, `gwlf` = ?, `pt` = ?, `advance` = ?, `food` = ?, `trn` = ?, `rr` = ?, `leave_amt` = ?, `pf_2` = ?, `trn_2` = ?, `uan` = ?, `esicNo` = ?, `agt` = ?, `accountNumber` = ?, `ifscCode` = ? WHERE id = ?
+[16-Jan-2026 16:29:31 UTC] UPDATE VALUES: ["John Doe","1001","ALKON PLASTIC PVT LTD","",15000,0,0,0,0,0,26,208,0,0,0,0,1800,100,0,0,0,0,0,0,0,0,0,"123456789012","1234567890","Group A","1234567890","SBIN0001234",1768569368456]
+[16-Jan-2026 16:30:34 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:31:30 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:33:14 UTC] API Request: action=save_batch, method=POST
+[16-Jan-2026 16:33:14 UTC] save_batch input: {"name":"kjh","date":"1/16/2026","data":[{"id":1768574113074,"cardNo":"1001","company":"INTERIOR AND MORE LTD","contactNo":"","uan":"123456789012","esicNo":"1234567890","name":"John Doe","days":26,"hr
+[16-Jan-2026 16:33:14 UTC] Saving batch: name=kjh, date=1/16/2026, data_size=5522
+[16-Jan-2026 16:33:15 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:33:24 UTC] API Request: action=delete_batch, method=GET
+[16-Jan-2026 16:33:24 UTC] Deleting batch ID: 29
+[16-Jan-2026 16:33:25 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:33:35 UTC] API Request: action=update_config, method=POST
+[16-Jan-2026 16:33:35 UTC] update_config input: {"appSettings":{"companyName":"Parishram Enterprises","appName":"Payroll Manager","version":"1.0"},"users":[{"username":"Raja","password":"Raja#184","role":"Super Admin","permissions":{"dashboard":tru
+[16-Jan-2026 16:33:36 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:33:38 UTC] API Request: action=update_config, method=POST
+[16-Jan-2026 16:33:38 UTC] update_config input: {"appSettings":{"companyName":"Parishram Enterprises","appName":"Payroll Manager","version":"1.0"},"users":[{"username":"Raja","password":"Raja#184","role":"Super Admin","permissions":{"dashboard":tru
+[16-Jan-2026 16:33:39 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:43:47 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 16:45:11 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 17:06:43 UTC] API Request: action=get_all, method=GET
+[16-Jan-2026 17:07:43 UTC] API Request: action=get_all, method=GET
